@@ -14,9 +14,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController{
+public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
-    static private int nextId = 1;
+    static int nextId = 1;
 
     @GetMapping
     public List<User> findAll() {
@@ -33,12 +33,11 @@ public class UserController{
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        if (!(users.containsKey(user.getId()))){
+        if (!(users.containsKey(user.getId()))) {
             throw new RuntimeException("Такого пользователя еще нет");
         }
         UserValidate.validateUser(user);
         users.put(user.getId(), user);
         return user;
     }
-
 }
