@@ -16,6 +16,7 @@ target/
 .mvn
 mvnw.cmd
 .idea
+!.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
