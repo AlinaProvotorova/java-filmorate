@@ -42,6 +42,7 @@ class UserValidateTest {
 
     @Test
     void validateName() {
+        UserValidate.validateUser(user);
         assertEquals(user.getLogin(), user.getName(), "Имя должно быть установленно значением Логина");
     }
 
