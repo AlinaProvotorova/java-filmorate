@@ -29,17 +29,17 @@ class UserValidateTest {
     @Test
     void validateEmail() {
         user.setEmail("");
-        assertThrows(ValidationException.class,()-> UserValidate.validateUser(user), UserValidate.validateEmail);
+        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateEmail);
         user.setEmail("a");
-        assertThrows(ValidationException.class,()-> UserValidate.validateUser(user), UserValidate.validateEmail);
+        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateEmail);
     }
 
     @Test
     void validateLogin() {
         user.setLogin("");
-        assertThrows(ValidationException.class,()-> UserValidate.validateUser(user), UserValidate.validateLogin);
+        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateLogin);
         user.setLogin("Alina ");
-        assertThrows(ValidationException.class,()-> UserValidate.validateUser(user), UserValidate.validateLogin);
+        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateLogin);
     }
 
     @Test
@@ -50,7 +50,7 @@ class UserValidateTest {
     @Test
     void validateBirthday() {
         user.setBirthday(LocalDate.now().plusDays(1));
-        assertThrows(ValidationException.class,()-> UserValidate.validateUser(user), UserValidate.validateBirthday);
+        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateBirthday);
     }
 
 }

@@ -22,7 +22,7 @@ public class UserValidate {
             log.debug(validateLogin);
             throw new ValidationException(validateLogin);
         }
-        if (user.getName() == null || user.getName().equals("") ) {
+        if (user.getName() == null || user.getName().equals("")) {
             user.setName(user.getLogin());
             log.info(validateName);
         }
