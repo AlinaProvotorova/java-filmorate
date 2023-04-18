@@ -14,7 +14,7 @@ import java.util.Map;
 public class FilmController {
 
     private final Map<Integer, Film> films = new HashMap<>();
-    static private int nextId = 1;
+    static int nextId = 1;
 
     @GetMapping
     public List<Film> findAll() {
@@ -31,7 +31,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateUser(@RequestBody Film film) {
-        if (!(films.containsKey(film.getId()))){
+        if (!(films.containsKey(film.getId()))) {
             throw new RuntimeException("Такого фильма еще нет");
         }
         FilmValidate.validateFilm(film);
