@@ -7,17 +7,14 @@
 *.zip
 *.tar.gz
 *.rar
-*.mvn
+.mvn
+.idea
 hs_err_pid*
 out/
 target/
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.mvn
-mvnw.cmd
-.idea
-!.mvn/wrapper/maven-wrapper.jar
-
 ### STS ###
 .apt_generated
 .classpath
