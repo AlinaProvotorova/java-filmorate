@@ -8,27 +8,20 @@ import java.time.LocalDate;
 
 @Slf4j
 public class UserValidate {
-    public static String validateEmail = "Электронная почта не может быть пустой и должна содержать символ @";
-    public static String validateLogin = "Логин не может быть пустым и содержать пробелы";
-    public static String validateName = "Имя установленно значением Логина";
-    public static String validateBirthday = "Дата рождения не может быть в будущем.";
 
     public static void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().equals("") || !(user.getEmail().contains("@"))) {
-            log.debug(validateEmail);
-            throw new ValidationException(validateEmail);
+            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
         }
         if (user.getLogin() == null || user.getLogin().equals("") || user.getLogin().contains(" ")) {
-            log.debug(validateLogin);
-            throw new ValidationException(validateLogin);
+            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
         if (user.getName() == null || user.getName().equals("")) {
             user.setName(user.getLogin());
-            log.info(validateName);
+            log.info("Имя установленно значением Логина");
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.debug(validateBirthday);
-            throw new ValidationException(validateBirthday);
+            throw new ValidationException("Дата рождения не может быть в будущем.");
         }
     }
 }

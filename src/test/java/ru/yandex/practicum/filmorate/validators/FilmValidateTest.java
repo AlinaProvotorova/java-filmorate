@@ -26,24 +26,36 @@ class FilmValidateTest {
     @Test
     void validateName() {
         film.setName("");
-        assertThrows(ValidationException.class, () -> FilmValidate.validateFilm(film), FilmValidate.validateName);
+        assertThrows(
+                ValidationException.class,
+                () -> FilmValidate.validateFilm(film),
+                "Нельзя передать пустое название");
     }
 
     @Test
     void validateDescription() {
         film.setDescription("q".repeat(201));
-        assertThrows(ValidationException.class, () -> FilmValidate.validateFilm(film), FilmValidate.validateDescription);
+        assertThrows(
+                ValidationException.class,
+                () -> FilmValidate.validateFilm(film),
+                "Описание фильма должно быть ограниченно 200 символами");
     }
 
     @Test
     void validateReleaseDate() {
         film.setReleaseDate(LocalDate.of(1895, 12, 27));
-        assertThrows(ValidationException.class, () -> FilmValidate.validateFilm(film), FilmValidate.validateReleaseDate);
+        assertThrows(
+                ValidationException.class,
+                () -> FilmValidate.validateFilm(film),
+                "Дата релиза — не может быть раньше 28 декабря 1895 года");
     }
 
     @Test
     void validateDuration() {
         film.setDuration(-1);
-        assertThrows(ValidationException.class, () -> FilmValidate.validateFilm(film), FilmValidate.validateDuration);
+        assertThrows(
+                ValidationException.class,
+                () -> FilmValidate.validateFilm(film),
+                "Продолжительность фильма должна быть положительной");
     }
 }

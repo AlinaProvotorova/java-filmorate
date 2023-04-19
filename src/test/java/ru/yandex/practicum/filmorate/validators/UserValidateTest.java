@@ -27,29 +27,47 @@ class UserValidateTest {
     @Test
     void validateEmail() {
         user.setEmail("");
-        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateEmail);
+        assertThrows(
+                ValidationException.class,
+                () -> UserValidate.validateUser(user),
+                "Электронная почта не может быть пустой");
         user.setEmail("a");
-        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateEmail);
+        assertThrows(
+                ValidationException.class,
+                () -> UserValidate.validateUser(user),
+                "Электронная почта должна содержать символ @");
     }
 
     @Test
     void validateLogin() {
         user.setLogin("");
-        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateLogin);
+        assertThrows(
+                ValidationException.class,
+                () -> UserValidate.validateUser(user),
+                "Логин не может быть пустым");
         user.setLogin("Alina ");
-        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateLogin);
+        assertThrows(
+                ValidationException.class,
+                () -> UserValidate.validateUser(user),
+                "Логин не может содержать пробелы");
     }
 
     @Test
     void validateName() {
         UserValidate.validateUser(user);
-        assertEquals(user.getLogin(), user.getName(), "Имя должно быть установленно значением Логина");
+        assertEquals(
+                user.getLogin(),
+                user.getName(),
+                "Имя должно быть установленно значением Логина");
     }
 
     @Test
     void validateBirthday() {
         user.setBirthday(LocalDate.now().plusDays(1));
-        assertThrows(ValidationException.class, () -> UserValidate.validateUser(user), UserValidate.validateBirthday);
+        assertThrows(
+                ValidationException.class,
+                () -> UserValidate.validateUser(user),
+                "Дата рождения не может быть в будущем.");
     }
 
 }

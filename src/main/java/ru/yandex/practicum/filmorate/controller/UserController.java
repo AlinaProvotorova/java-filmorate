@@ -1,15 +1,15 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeptions.ErrorMessage;
+import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validators.UserValidate;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody User user) {
+    public Object create(@RequestBody User user) {
         UserValidate.validateUser(user);
         user.setId(nextId++);
         users.put(user.getId(), user);
@@ -32,12 +32,20 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
         if (!(users.containsKey(user.getId()))) {
-            throw new RuntimeException("Такого пользователя еще нет");
+            throw new ValidationException(String.format("Пользователя с id %s не существует", user.getId()));
         }
         UserValidate.validateUser(user);
         users.put(user.getId(), user);
         return user;
+    }
+
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    public ErrorMessage handlerExeption(ValidationException e) {
+        log.debug(e.getMessage());
+        return new ErrorMessage(e.getMessage());
     }
 }
