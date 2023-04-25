@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exeptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
+import ru.yandex.practicum.filmorate.model.ErrorMessage;
 
 @RestControllerAdvice
 @Slf4j
@@ -35,9 +35,4 @@ public class ErrorHandler {
         log.debug(e.getMessage());
         return new ErrorMessage(e.getMessage());
     }
-}
-
-@Data
-class ErrorMessage {
-    private final String message;
 }
