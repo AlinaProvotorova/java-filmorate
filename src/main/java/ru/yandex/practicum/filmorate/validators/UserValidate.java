@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.validators;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Slf4j
 public class UserValidate {
@@ -22,6 +24,15 @@ public class UserValidate {
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения не может быть в будущем.");
+        }
+    }
+
+    public static void validateNotFoundId(Set<Integer> listObj, Integer id) {
+        if (id < 0) {
+            throw new NotFoundException("Id может быть только положительным");
+        }
+        if (!(listObj.contains(id))) {
+            throw new NotFoundException(String.format("Пользователя с id %s не существует", id));
         }
     }
 }

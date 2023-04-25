@@ -1,54 +1,53 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeptions.ErrorMessage;
-import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.validators.FilmValidate;
+import ru.yandex.practicum.filmorate.service.InMemoryFilmService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/films")
-@Slf4j
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<>();
-    static int nextId = 1;
+    private final InMemoryFilmService filmService;
+
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable Integer id) {
+        return filmService.getById(id);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getTenPopularFilms(
+            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count
+    ) {
+        return filmService.getTenPopularFilms(count);
+    }
 
     @GetMapping
     public List<Film> findAll() {
-        return new ArrayList<>(films.values());
+        return filmService.getAll();
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        FilmValidate.validateFilm(film);
-        film.setId(nextId++);
-        films.put(film.getId(), film);
-        return film;
+        return filmService.create(film);
     }
 
     @PutMapping
     public Film updateUser(@RequestBody Film film) {
-        if (!(films.containsKey(film.getId()))) {
-            throw new ValidationException(String.format("Фильма с id %s не существует", film.getId()));
-        }
-        FilmValidate.validateFilm(film);
-        films.put(film.getId(), film);
-        return film;
+        return filmService.update(film);
     }
 
+    @PutMapping("/{id}/like/{userId}")
+    public Film like(@PathVariable Integer id, @PathVariable Integer userId) {
+        return filmService.like(id, userId);
+    }
 
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(ValidationException.class)
-    public ErrorMessage handlerExeption(ValidationException e) {
-        log.debug(e.getMessage());
-        return new ErrorMessage(e.getMessage());
+    @DeleteMapping("/{id}/like/{userId}")
+    public Film dislike(@PathVariable Integer id, @PathVariable Integer userId) {
+        return filmService.dislike(id, userId);
     }
 }

@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.validators;
 
+import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public class FilmValidate {
 
@@ -19,6 +21,15 @@ public class FilmValidate {
         }
         if (film.getDuration() < 0) {
             throw new ValidationException("Продолжительность фильма должна быть положительной");
+        }
+    }
+
+    public static void validateNotFoundId(Set<Integer> listObj, Integer id) {
+        if (id < 0) {
+            throw new NotFoundException("Id может быть только положительным");
+        }
+        if (!(listObj.contains(id))) {
+            throw new NotFoundException(String.format("Фильма с id %s не существует", id));
         }
     }
 }

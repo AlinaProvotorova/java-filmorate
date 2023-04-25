@@ -1,51 +1,57 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeptions.ErrorMessage;
-import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validators.UserValidate;
+import ru.yandex.practicum.filmorate.service.InMemoryUserService;
 
 
 import java.util.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
-@Slf4j
 public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    static int nextId = 1;
+    private final InMemoryUserService userService;
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        return userService.getById(id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFrends(@PathVariable Integer id) {
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getFrends(@PathVariable Integer id, @PathVariable Integer otherId) {
+        return userService.getFriendsOfFriend(id, otherId);
+    }
 
     @GetMapping
     public List<User> findAll() {
-        return new ArrayList<>(users.values());
+        return userService.getAll();
     }
 
     @PostMapping
     public Object create(@RequestBody User user) {
-        UserValidate.validateUser(user);
-        user.setId(nextId++);
-        users.put(user.getId(), user);
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping
     public User updateUser(@RequestBody User user) {
-        if (!(users.containsKey(user.getId()))) {
-            throw new ValidationException(String.format("Пользователя с id %s не существует", user.getId()));
-        }
-        UserValidate.validateUser(user);
-        users.put(user.getId(), user);
-        return user;
+        return userService.update(user);
     }
 
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(ValidationException.class)
-    @ResponseBody
-    public ErrorMessage handlerExeption(ValidationException e) {
-        log.debug(e.getMessage());
-        return new ErrorMessage(e.getMessage());
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addToFrend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        return userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteToFrend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        userService.deleteFriend(id, friendId);
+        return userService.getById(id);
     }
 }
