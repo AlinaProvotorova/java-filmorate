@@ -38,7 +38,7 @@ public class InMemoryFilmService implements FilmStorage, FilmService {
     }
 
     @Override
-    public List<Film> getTenPopularFilms(Integer count) {
+    public List<Film> getPopularFilms(Integer count) {
         ArrayList<Film> filmsV = new ArrayList<>(films.values());
         return filmsV.stream()
                 .sorted((f0, f1) -> -1 * f0.getLenLikes().compareTo(f1.getLenLikes()))

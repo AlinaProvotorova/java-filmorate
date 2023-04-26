@@ -10,5 +10,5 @@ public interface FilmService {
 
     Film dislike(Integer id, Integer userId);
 
-    List<Film> getTenPopularFilms(Integer count);
+    List<Film> getPopularFilms(Integer count);
 }

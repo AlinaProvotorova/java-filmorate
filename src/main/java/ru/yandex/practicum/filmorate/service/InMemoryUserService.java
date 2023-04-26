@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validators.UserValidate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,11 +33,9 @@ public class InMemoryUserService implements UserStorage, UserService {
     @Override
     public List<User> getFriends(Integer id) {
         UserValidate.validateNotFoundId(users.keySet(), id);
-        List<User> friends = new ArrayList<>();
-        for (Integer idFriend : users.get(id).getIdFriends()) {
-            friends.add(users.get(idFriend));
-        }
-        return friends;
+        return users.get(id).getIdFriends().stream()
+                .map(users::get)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -45,11 +44,9 @@ public class InMemoryUserService implements UserStorage, UserService {
         UserValidate.validateNotFoundId(users.keySet(), otherId);
         Set<Integer> intersection = users.get(id).getIdFriends();
         intersection.retainAll(users.get(otherId).getIdFriends());
-        List<User> friends = new ArrayList<>();
-        for (Integer idFriend : intersection) {
-            friends.add(users.get(idFriend));
-        }
-        return friends;
+        return intersection.stream()
+                .map(users::get)
+                .collect(Collectors.toList());
     }
 
 
