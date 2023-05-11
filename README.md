@@ -2,12 +2,14 @@
 
 Template repository for Filmorate project.
 
-# База данных 
-![Базза данных для проекта](img.png)
+# База данных
+
+![Базза данных для проекта](media/img_1.png)
 
 ## Примеры запросов
 
 - Получение подтвержденных друзей
+
 ```roomsql
     SELECT 
         f.friend_id
@@ -17,6 +19,7 @@ Template repository for Filmorate project.
 ```
 
 - Получение исходящих заявок
+
 ```roomsql
     SELECT 
         f.user_id
@@ -26,6 +29,7 @@ Template repository for Filmorate project.
 ```
 
 - Получение исходящих заявок
+
 ```roomsql
     SELECT 
         f.friend_id
@@ -35,6 +39,7 @@ Template repository for Filmorate project.
 ```
 
 - Получение фильмов которым поставил лайки
+
 ```roomsql
     SELECT 
         l.id_film
@@ -43,6 +48,7 @@ Template repository for Filmorate project.
 ```
 
 - Получение лайков у фильма
+
 ```roomsql
     SELECT 
         f.name,
