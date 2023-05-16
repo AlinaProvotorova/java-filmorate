@@ -6,8 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 
 @AllArgsConstructor
 @Builder
@@ -18,17 +20,17 @@ public class Film {
     private LocalDate releaseDate;
     private String description;
     private Integer duration;
-    private final Set<Integer> likes = new TreeSet<>();
+    private Set<Genre> genres;
+    private Optional<Rating> mpa;
 
-    public void addLikes(Integer idUser) {
-        likes.add(idUser);
-    }
 
-    public void delLikes(Integer idUser) {
-        likes.remove(idUser);
-    }
-
-    public Integer getLenLikes() {
-        return likes.size();
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", name);
+        values.put("release_date", java.sql.Date.valueOf(releaseDate));
+        values.put("description", description);
+        values.put("duration", duration);
+        values.put("rating_id", mpa.get().getId());
+        return values;
     }
 }

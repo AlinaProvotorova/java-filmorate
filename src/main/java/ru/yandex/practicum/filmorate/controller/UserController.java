@@ -3,55 +3,85 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.InMemoryUserService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
-
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final InMemoryUserService userService;
 
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable Integer id) {
-        return userService.getById(id);
-    }
-
-    @GetMapping("/{id}/friends")
-    public List<User> getFrends(@PathVariable Integer id) {
-        return userService.getFriends(id);
-    }
-
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getFrends(@PathVariable Integer id, @PathVariable Integer otherId) {
-        return userService.getFriendsOfFriend(id, otherId);
-    }
+    private final UserService service;
 
     @GetMapping
-    public List<User> findAll() {
-        return userService.getAll();
+    public List<User> getAllUsers() {
+        return service.getAll();
     }
 
     @PostMapping
-    public Object create(@RequestBody User user) {
-        return userService.create(user);
+    public User createUser(@RequestBody User user) {
+        return service.create(user);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) {
-        return userService.update(user);
+    public Optional<User> updateUser(@RequestBody User user) {
+        return service.update(user);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<User> getUserById(@PathVariable Integer id) {
+        return service.getById(id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getAllFriends(@PathVariable Integer id) {
+        return service.getAllFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getFriendsOfFriend(@PathVariable Integer id, @PathVariable Integer otherId) {
+        return service.getFriendsOfFriend(id, otherId);
+    }
+
+    @GetMapping("/{id}/friends/incoming")
+    public List<User> getIncomingFriendsRequests(@PathVariable Integer id) {
+        return service.getIncomingFriendsRequests(id);
+    }
+
+    @GetMapping("/{id}/friends/outgoing")
+    public List<User> getOutgoingFriendsRequests(@PathVariable Integer id) {
+        return service.getOutgoingFriendsRequests(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public User addToFrend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        return userService.addFriend(id, friendId);
+    public String sendFriendshipRequest(@PathVariable Integer id, @PathVariable Integer friendId) {
+        service.sendFriendshipRequest(id, friendId);
+        return "Заявка другу " + friendId + " успешно отправленна";
+    }
+
+    @PutMapping("/{id}/friends/accept/{friendId}")
+    public String acceptFriendship(@PathVariable Integer id, @PathVariable Integer friendId) {
+        service.acceptFriendship(id, friendId);
+        return "Заявка от друга " + friendId + " принята";
+    }
+
+    @DeleteMapping("/{id}/friends/reject/{friendId}")
+    public String rejectFriendship(@PathVariable Integer id, @PathVariable Integer friendId) {
+        service.rejectFriendship(id, friendId);
+        return "Заявка от друга " + friendId + " отклонена";
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public User deleteToFrend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        userService.deleteFriend(id, friendId);
-        return userService.getById(id);
+    public String deleteToFrend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        service.deleteFriend(id, friendId);
+        return "Друг " + friendId + "  удален";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Integer id) {
+        service.delete(id);
+        return "Пользователь " + id + " удален";
     }
 }

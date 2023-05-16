@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Builder
 @Data
@@ -14,20 +17,14 @@ public class User {
     private String email;
     private String name;
     private LocalDate birthday;
-    private final Set<Integer> idFriends = new TreeSet<>();
 
-    public User addFriend(User user) {
-        this.idFriends.add(user.getId());
-        user.idFriends.add(this.getId());
-        return this;
-    }
 
-    public void deleteFriend(User user) {
-        this.idFriends.remove(user.getId());
-        user.idFriends.remove(this.getId());
-    }
-
-    public Set<Integer> getIdFriends() {
-        return new HashSet<>(this.idFriends);
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("login", login);
+        values.put("email", email);
+        values.put("birthday", birthday);
+        values.put("name", name);
+        return values;
     }
 }
