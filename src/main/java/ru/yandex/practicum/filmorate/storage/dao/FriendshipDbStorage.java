@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 
 import java.util.List;
 
-//@Primary
+
 @Component
 @Qualifier("friendshipDbStorage")
 @Slf4j

@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface FriendshipStorage {
 
-    List<User> getAllFriends(Integer user_id);
+    List<User> getAllFriends(Integer userId);
 
-    List<User> getIncomingFriendsRequests(Integer user_id);
+    List<User> getIncomingFriendsRequests(Integer userId);
 
-    List<User> getOutgoingFriendsRequests(Integer user_id);
+    List<User> getOutgoingFriendsRequests(Integer userId);
 
-    boolean sendFriendshipRequest(Integer user_id, Integer friend_id);
+    boolean sendFriendshipRequest(Integer userId, Integer friendId);
 
-    void acceptFriendship(Integer user_id, Integer friend_id);
+    void acceptFriendship(Integer userId, Integer friendId);
 
-    void rejectFriendship(Integer user_id, Integer friend_id);
+    void rejectFriendship(Integer userId, Integer friendId);
 
     List<User> getFriendsOfFriend(Integer id, Integer otherId);
 
