@@ -7,6 +7,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @SqlGroup({
@@ -15,17 +21,32 @@ import org.springframework.test.context.jdbc.SqlGroup;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class LikesDbStorageTest {
-
+    private final LikesDbStorage likesDbStorage;
+    private final FilmDbStorage filmDbStorage;
     @Test
     void like() {
+        likesDbStorage.like(2, 3);
+        List<Film> likeFilms = likesDbStorage.getFavoriteFilmsByUser(3);
+        List<User> likeUsers = likesDbStorage.getLikesByFilm(2);
+        assertThat(likeFilms).hasSize(4);
+        assertThat(likeUsers).hasSize(3);
 
     }
 
     @Test
     void dislike() {
+        likesDbStorage.dislike(4, 1);
+        List<Film> likeFilms = likesDbStorage.getFavoriteFilmsByUser(1);
+        List<User> likeUsers = likesDbStorage.getLikesByFilm(4);
+        assertThat(likeFilms).hasSize(4);
+        assertThat(likeUsers).hasSize(1);
     }
 
     @Test
     void getPopularFilms() {
+        List<Film> popularFilms = likesDbStorage.getPopularFilms(2);
+        assertThat(popularFilms).hasSize(2);
+        assertThat(popularFilms).contains(filmDbStorage.getById(1).get());
+        assertThat(popularFilms).contains(filmDbStorage.getById(5).get());
     }
 }

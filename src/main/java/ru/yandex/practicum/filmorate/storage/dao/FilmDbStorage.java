@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.RatingStorage;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Primary
-@Data
+@RequiredArgsConstructor
 @Component
 @Qualifier("filmDbStorage")
 @Slf4j
@@ -52,7 +53,7 @@ public class FilmDbStorage implements FilmStorage {
                 );
             }
         }
-        return getById(id).get();
+        return getById(id).isPresent() ? getById(id).get() : film;
     }
 
     @Override
@@ -66,7 +67,7 @@ public class FilmDbStorage implements FilmStorage {
                     film.getReleaseDate(),
                     film.getDescription(),
                     film.getDuration(),
-                    film.getMpa().get().getId(),
+                    film.getMpa().getId(),
                     film.getId()
             );
             if (film.getGenres() != null) {
@@ -102,7 +103,7 @@ public class FilmDbStorage implements FilmStorage {
                     "select * from film where id = ?",
                     this::makeFilm, id
             );
-            return Optional.of(film);
+            return Optional.ofNullable(film);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -118,7 +119,9 @@ public class FilmDbStorage implements FilmStorage {
                 .releaseDate(rs.getDate("release_date").toLocalDate())
                 .duration(rs.getInt("duration"))
                 .genres(genreStorage.getGenresByFilm(rs.getInt("id")))
-                .mpa(ratingStorage.getById(rs.getInt("rating_id")))
+                .mpa(ratingStorage.getById(
+                        rs.getInt("rating_id")).orElse(new Rating())
+                )
                 .build();
     }
 }

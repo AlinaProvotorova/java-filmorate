@@ -7,7 +7,8 @@ import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.Optional;
+
+import static ru.yandex.practicum.filmorate.validators.Constants.ID_NOT_POSITIVE;
 
 @Slf4j
 @Data
@@ -31,24 +32,8 @@ public class UserValidate {
 
     public static void validateId(Integer id) {
         if (id < 0) {
-            throw new NotFoundException("Id может быть только положительным");
+            throw new NotFoundException(ID_NOT_POSITIVE);
         }
-    }
-
-    public static Optional<User> validateOptoinalUser(Optional<User> optionalUser, Integer id) {
-        validateId(id);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException(String.format("Пользователя с id %s не существует", id));
-        }
-        return optionalUser;
-    }
-
-    public static boolean validateDeleteUser(boolean deleteUser, Integer id) {
-        validateId(id);
-        if (!deleteUser) {
-            throw new NotFoundException(String.format("Пользователя с id %s не существует", id));
-        }
-        return deleteUser;
     }
 
     public static boolean validateFriendship(boolean friendship, Integer userId, Integer friendId) {

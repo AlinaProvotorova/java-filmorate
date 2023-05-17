@@ -5,7 +5,8 @@ import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.Optional;
+
+import static ru.yandex.practicum.filmorate.validators.Constants.ID_NOT_POSITIVE;
 
 public class FilmValidate {
 
@@ -26,24 +27,8 @@ public class FilmValidate {
 
     public static void validateId(Integer id) {
         if (id < 0) {
-            throw new NotFoundException("Id может быть только положительным");
+            throw new NotFoundException(ID_NOT_POSITIVE);
         }
-    }
-
-    public static Optional<Film> validateOptoinalFilm(Optional<Film> optionalFilm, Integer id) {
-        validateId(id);
-        if (optionalFilm.isEmpty()) {
-            throw new NotFoundException(String.format("Фильма с id %s не существует", id));
-        }
-        return optionalFilm;
-    }
-
-    public static boolean validateDeleteFilm(boolean deleteFilm, Integer id) {
-        validateId(id);
-        if (!deleteFilm) {
-            throw new NotFoundException(String.format("Фильма с id %s не существует", id));
-        }
-        return deleteFilm;
     }
 
 }

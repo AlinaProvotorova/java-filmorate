@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.GenreService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -17,7 +16,7 @@ public class GenreController {
     private final GenreService service;
 
     @GetMapping("/{id}")
-    public Optional<Genre> getGenreById(@PathVariable Integer id) {
+    public Genre getGenreById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
@@ -37,7 +36,7 @@ public class GenreController {
     }
 
     @PutMapping
-    public Optional<Genre> updateGenre(@RequestBody Genre genre) {
+    public Genre updateGenre(@RequestBody Genre genre) {
         return service.update(genre);
     }
 

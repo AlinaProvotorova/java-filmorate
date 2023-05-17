@@ -49,7 +49,7 @@ class FilmDbStorageTest {
                 .description("Описание")
                 .releaseDate(LocalDate.now())
                 .duration(60)
-                .mpa(Optional.of(Rating.builder().id(1).build()))
+                .mpa(Rating.builder().id(1).build())
                 .build());
         assertThat(film)
                 .hasFieldOrPropertyWithValue("name", "Фильм1");
@@ -64,7 +64,7 @@ class FilmDbStorageTest {
                 .description("Описание")
                 .releaseDate(LocalDate.now())
                 .duration(60)
-                .mpa(Optional.of(Rating.builder().id(1).build()))
+                .mpa(Rating.builder().id(1).build())
                 .build();
         assertThat(filmDbStorage.update(film))
                 .isPresent()

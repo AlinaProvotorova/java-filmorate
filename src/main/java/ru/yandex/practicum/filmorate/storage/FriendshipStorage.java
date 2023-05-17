@@ -13,7 +13,7 @@ public interface FriendshipStorage {
 
     List<User> getOutgoingFriendsRequests(Integer userId);
 
-    boolean sendFriendshipRequest(Integer userId, Integer friendId);
+    void sendFriendshipRequest(Integer userId, Integer friendId);
 
     void acceptFriendship(Integer userId, Integer friendId);
 

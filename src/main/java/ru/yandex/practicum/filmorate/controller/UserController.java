@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,12 +25,12 @@ public class UserController {
     }
 
     @PutMapping
-    public Optional<User> updateUser(@RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
         return service.update(user);
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable Integer id) {
+    public User getUserById(@PathVariable Integer id) {
         return service.getById(id);
     }
 

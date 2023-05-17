@@ -9,7 +9,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Rating {
-    private final Integer id;
+    private Integer id;
     private String name;
     private String description;
+
+    public Rating() {
+
+    }
 }

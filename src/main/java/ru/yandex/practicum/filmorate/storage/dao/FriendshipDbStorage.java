@@ -44,16 +44,12 @@ public class FriendshipDbStorage extends UserDbStorage implements FriendshipStor
     }
 
     @Override
-    public boolean sendFriendshipRequest(Integer userId, Integer friendId) {
+    public void sendFriendshipRequest(Integer userId, Integer friendId) {
         String sql = "INSERT INTO friendship (user_id, friend_id, IS_ACCEPTED) VALUES (?, ?, TRUE)";
         // Изначально я здесь реализовала другую дружбу(с принятием заявок и отклонением,
         // код есть ниже, но по тз это не верно и тесты не проходят, хочу оставить данный код для дальнейшего
 //        String sql = "INSERT INTO friendship (user_id, friend_id, ) VALUES (?, ?)";
-        jdbcTemplate.update(sql,
-                userId,
-                friendId
-        );
-        return true;
+        jdbcTemplate.update(sql, userId, friendId);
     }
 
     @Override

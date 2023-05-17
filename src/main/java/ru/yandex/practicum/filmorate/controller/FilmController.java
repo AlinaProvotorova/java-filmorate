@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +15,7 @@ public class FilmController {
     private final FilmService service;
 
     @GetMapping("/{id}")
-    public Optional<Film> getFilmById(@PathVariable Integer id) {
+    public Film getFilmById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
@@ -38,17 +37,17 @@ public class FilmController {
     }
 
     @PutMapping
-    public Optional<Film> updateFilm(@RequestBody Film film) {
+    public Film updateFilm(@RequestBody Film film) {
         return service.update(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public Optional<Film> like(@PathVariable Integer id, @PathVariable Integer userId) {
+    public Film like(@PathVariable Integer id, @PathVariable Integer userId) {
         return service.like(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Optional<Film> dislike(@PathVariable Integer id, @PathVariable Integer userId) {
+    public Film dislike(@PathVariable Integer id, @PathVariable Integer userId) {
         return service.dislike(id, userId);
     }
 

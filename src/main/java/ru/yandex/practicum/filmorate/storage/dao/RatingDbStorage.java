@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Primary
-@Data
+@RequiredArgsConstructor
 @Component
 @Qualifier("ratingDbStorage")
 @Slf4j
@@ -70,7 +70,7 @@ public class RatingDbStorage implements RatingStorage {
         try {
             String sql = "select * from rating where id = ?";
             Rating rating = jdbcTemplate.queryForObject(sql, this::makeRating, id);
-            return Optional.of(rating);
+            return Optional.ofNullable(rating);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

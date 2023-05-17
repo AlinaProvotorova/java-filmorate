@@ -1,17 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
-@AllArgsConstructor
 @Builder
 @Data
 public class Film {
@@ -21,7 +18,7 @@ public class Film {
     private String description;
     private Integer duration;
     private Set<Genre> genres;
-    private Optional<Rating> mpa;
+    private Rating mpa;
 
 
     public Map<String, Object> toMap() {
@@ -30,7 +27,7 @@ public class Film {
         values.put("release_date", java.sql.Date.valueOf(releaseDate));
         values.put("description", description);
         values.put("duration", duration);
-        values.put("rating_id", mpa.get().getId());
+        values.put("rating_id", mpa.getId());
         return values;
     }
 }

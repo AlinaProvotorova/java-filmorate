@@ -1,109 +1,36 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
-import ru.yandex.practicum.filmorate.validators.UserValidate;
 
 import java.util.List;
-import java.util.Optional;
 
 
-@Service
-@RequiredArgsConstructor
-public class UserService implements UserStorage, FriendshipStorage {
+public interface UserService {
 
-    private final UserStorage userStorage;
-    private final FriendshipStorage friendshipStorage;
+    List<User> getAll();
 
-    @Override
-    public List<User> getAll() {
-        return userStorage.getAll();
-    }
+    User create(User user);
 
+    User update(User user);
 
-    @Override
-    public User create(User user) {
-        UserValidate.validateUser(user);
-        return userStorage.create(user);
-    }
+    void delete(Integer id);
 
-    @Override
-    public Optional<User> update(User user) {
-        UserValidate.validateId(user.getId());
-        UserValidate.validateUser(user);
-        return UserValidate.validateOptoinalUser(
-                userStorage.update(user), user.getId()
-        );
-    }
+    User getById(Integer id);
 
-    @Override
-    public boolean delete(Integer id) {
-        return UserValidate.validateDeleteUser(
-                userStorage.delete(id), id
-        );
-    }
+    List<User> getAllFriends(Integer userId);
 
-    @Override
-    public Optional<User> getById(Integer id) {
-        return UserValidate.validateOptoinalUser(
-                userStorage.getById(id), id
-        );
-    }
+    List<User> getIncomingFriendsRequests(Integer userId);
 
-    @Override
-    public boolean deleteFriend(Integer userId, Integer friendId) {
-        return UserValidate.validateFriendship(
-                friendshipStorage.deleteFriend(userId, friendId),
-                userId, friendId
-        );
-    }
+    List<User> getOutgoingFriendsRequests(Integer userId);
 
-    @Override
-    public List<User> getAllFriends(Integer userId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        return friendshipStorage.getAllFriends(userId);
-    }
+    void sendFriendshipRequest(Integer userId, Integer friendId);
 
-    @Override
-    public List<User> getIncomingFriendsRequests(Integer userId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        return friendshipStorage.getIncomingFriendsRequests(userId);
-    }
+    void acceptFriendship(Integer userId, Integer friendId);
 
-    @Override
-    public List<User> getOutgoingFriendsRequests(Integer userId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        return friendshipStorage.getOutgoingFriendsRequests(userId);
-    }
+    void rejectFriendship(Integer userId, Integer friendId);
 
-    @Override
-    public boolean sendFriendshipRequest(Integer userId, Integer friendId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        UserValidate.validateOptoinalUser(getById(friendId), friendId);
-        return friendshipStorage.sendFriendshipRequest(userId, friendId);
-    }
+    List<User> getFriendsOfFriend(Integer id, Integer otherId);
 
-    @Override
-    public void acceptFriendship(Integer userId, Integer friendId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        UserValidate.validateOptoinalUser(getById(friendId), friendId);
-        friendshipStorage.acceptFriendship(userId, friendId);
-    }
+    void deleteFriend(Integer idUser, Integer idFriend);
 
-    @Override
-    public void rejectFriendship(Integer userId, Integer friendId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        UserValidate.validateOptoinalUser(getById(friendId), friendId);
-        friendshipStorage.rejectFriendship(userId, friendId);
-    }
-
-    @Override
-    public List<User> getFriendsOfFriend(Integer userId, Integer friendId) {
-        UserValidate.validateOptoinalUser(getById(userId), userId);
-        UserValidate.validateOptoinalUser(getById(friendId), friendId);
-        return friendshipStorage.getFriendsOfFriend(userId, friendId);
-    }
 }

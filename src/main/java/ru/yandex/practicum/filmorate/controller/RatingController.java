@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.service.RatingService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +15,7 @@ public class RatingController {
     private final RatingService service;
 
     @GetMapping("/{id}")
-    public Optional<Rating> getGenreById(@PathVariable Integer id) {
+    public Rating getGenreById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
@@ -31,7 +30,7 @@ public class RatingController {
     }
 
     @PutMapping
-    public Optional<Rating> updateFilm(@RequestBody Rating rating) {
+    public Rating updateFilm(@RequestBody Rating rating) {
         return service.update(rating);
     }
 

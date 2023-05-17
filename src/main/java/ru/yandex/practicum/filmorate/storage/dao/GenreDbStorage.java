@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Primary
-@Data
+@RequiredArgsConstructor
 @Component
 @Qualifier("genreDbStorage")
 @Slf4j
@@ -76,7 +76,7 @@ public class GenreDbStorage implements GenreStorage {
         try {
             String sql = "select * from genre where id = ?";
             Genre genre = jdbcTemplate.queryForObject(sql, this::makeGenre, id);
-            return Optional.of(genre);
+            return Optional.ofNullable(genre);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

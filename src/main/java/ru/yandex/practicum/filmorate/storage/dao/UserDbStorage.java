@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Primary
-@Data
+@RequiredArgsConstructor
 @Component
 @Qualifier("userDbStorage")
 @Slf4j
@@ -37,7 +37,7 @@ public class UserDbStorage implements UserStorage {
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
         Integer id = simpleJdbcInsert.executeAndReturnKey(user.toMap()).intValue();
-        return getById(id).get();
+        return getById(id).isPresent() ? getById(id).get() : user;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UserDbStorage implements UserStorage {
                     "select * from users where id = ?",
                     this::makeUser, id
             );
-            return Optional.of(user);
+            return Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
