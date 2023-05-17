@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LikesDbStorageTest {
     private final LikesDbStorage likesDbStorage;
     private final FilmDbStorage filmDbStorage;
+
     @Test
     void like() {
         likesDbStorage.like(2, 3);
