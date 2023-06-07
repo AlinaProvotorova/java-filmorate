@@ -111,7 +111,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
 
-    protected Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
+    public Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
         return Film.builder()
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
