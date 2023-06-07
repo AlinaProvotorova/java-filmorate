@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
@@ -67,12 +66,6 @@ public class UserServiceImpl implements UserService {
         if (!friendshipStorage.deleteFriend(userId, friendId)) {
             throw new NotFoundException(String.format("Дружбы между пользователями %s и %s не существует", userId, friendId));
         }
-    }
-
-    @Override
-    public List<Film> recommendations(Integer id) {
-        UserValidate.validateId(id);
-        return userStorage.recommendations(id);
     }
 
     @Override
