@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.mapper.ReviewMapper;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
@@ -16,12 +17,11 @@ import java.util.List;
 public class ReviewDbStorage implements ReviewStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private final JdbcTemplate jdbcTemplate;
+    private final ReviewMapper reviewMapper;
 
-
-
-    public ReviewDbStorage(JdbcTemplate jdbcTemplate) {
+    public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewMapper reviewMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.reviewMapper = reviewMapper;
     }
 
 
