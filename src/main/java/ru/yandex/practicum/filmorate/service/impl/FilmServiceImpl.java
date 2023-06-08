@@ -94,6 +94,17 @@ public class FilmServiceImpl implements FilmService {
         );
     }
 
+    @Override
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        UserValidate.validateId(userId);
+        UserValidate.validateId(friendId);
+        userStorage.getById(userId).orElseThrow(
+                () -> new NotFoundException(String.format(USER_NOT_FOUND, userId)));
+        userStorage.getById(friendId).orElseThrow(
+                () -> new NotFoundException(String.format(USER_NOT_FOUND, friendId)));
+        return likesStorage.getCommonFilms(userId, friendId);
+    }
+
     private void checkRatingFilm(Film film) {
         Integer id = film.getMpa().getId();
         ratingStorage.getById(id).orElseThrow(

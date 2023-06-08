@@ -50,4 +50,13 @@ class LikesDbStorageTest {
         assertThat(popularFilms).contains(filmDbStorage.getById(1).get());
         assertThat(popularFilms).contains(filmDbStorage.getById(5).get());
     }
+
+    @Test
+    void getCommonFilms() {
+        List<Film> commonFilms = likesDbStorage.getCommonFilms(1, 3);
+        assertThat(commonFilms).hasSize(3);
+        assertThat(commonFilms).contains(filmDbStorage.getById(1).get());
+        assertThat(commonFilms).contains(filmDbStorage.getById(5).get());
+        assertThat(commonFilms).contains(filmDbStorage.getById(3).get());
+    }
 }
