@@ -98,6 +98,10 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getCommonFilms(Integer userId, Integer friendId) {
         UserValidate.validateId(userId);
         UserValidate.validateId(friendId);
+        userStorage.getById(userId).orElseThrow(
+                () -> new NotFoundException(String.format(USER_NOT_FOUND, userId)));
+        userStorage.getById(friendId).orElseThrow(
+                () -> new NotFoundException(String.format(USER_NOT_FOUND, friendId)));
         return likesStorage.getCommonFilms(userId, friendId);
     }
 
