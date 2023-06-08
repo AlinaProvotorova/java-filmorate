@@ -64,4 +64,19 @@ public class LikesDbStorage implements LikesStorage {
                 "FROM FILM f JOIN likes_film l ON f.ID = l.FILM_ID WHERE l.USER_ID = ? ORDER BY f.ID";
         return new ArrayList<>(jdbcTemplate.query(sql, filmDbStorage::makeFilm, userId));
     }
+
+    @Override
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        String sql = "SELECT f.ID, f.NAME, f.RELEASE_DATE, f.DESCRIPTION, f.DURATION, f.RATING_ID " +
+                "FROM FILM f " +
+                "LEFT JOIN LIKES_FILM lf ON lf.FILM_ID = f.ID " +
+                "WHERE FILM_ID IN " +
+                "(SELECT FILM_ID FROM LIKES_FILM " +
+                "WHERE USER_ID = ? AND FILM_ID IN " +
+                "(SELECT FILM_ID FROM LIKES_FILM " +
+                "WHERE USER_ID = ?)) " +
+                "GROUP BY f.ID " +
+                "ORDER BY COUNT(lf.USER_ID) DESC";
+        return new ArrayList<>(jdbcTemplate.query(sql, filmDbStorage::makeFilm, userId, friendId));
+    }
 }

@@ -56,4 +56,10 @@ public class FilmController {
         service.delete(id);
         return "Фильм " + id + " удален";
     }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam(value = "userId") Integer userId,
+                                     @RequestParam(value = "friendId") Integer friendId) {
+        return service.getCommonFilms(userId, friendId);
+    }
 }

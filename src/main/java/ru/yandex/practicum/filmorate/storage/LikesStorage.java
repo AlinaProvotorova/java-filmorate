@@ -16,4 +16,6 @@ public interface LikesStorage {
     List<User> getLikesByFilm(Integer filmId);
 
     List<Film> getFavoriteFilmsByUser(Integer userId);
+
+    List<Film> getCommonFilms(Integer userId, Integer friendId);
 }
