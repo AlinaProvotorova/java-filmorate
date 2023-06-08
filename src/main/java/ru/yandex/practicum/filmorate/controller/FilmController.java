@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -29,6 +30,11 @@ public class FilmController {
     @GetMapping
     public List<Film> findAll() {
         return service.getAll();
+    }
+
+    @GetMapping("director/{directorId}")
+    public List<Film> getSortedFilms(@PathVariable("directorId") Integer id, @RequestParam List<String> sortBy) {
+        return null;
     }
 
     @PostMapping
