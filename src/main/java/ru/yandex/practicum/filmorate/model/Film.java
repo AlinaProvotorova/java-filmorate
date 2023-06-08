@@ -19,7 +19,7 @@ public class Film {
     private Integer duration;
     private Set<Genre> genres;
     private Rating mpa;
-    private Director director;
+    private Set<Director> director;
 
 
     public Map<String, Object> toMap() {
