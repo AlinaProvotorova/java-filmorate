@@ -15,7 +15,7 @@ public class Review {
     private Boolean isPositive;
     private final Integer userId;
     private final Integer filmId;
-    private final Integer useful = 0;
+    private Integer useful = 0;
 
 
     @Override
