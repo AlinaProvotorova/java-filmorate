@@ -96,6 +96,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        UserValidate.validateId(userId);
+        UserValidate.validateId(friendId);
         return likesStorage.getCommonFilms(userId, friendId);
     }
 
