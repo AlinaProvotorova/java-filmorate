@@ -12,14 +12,11 @@ public class Review {
 
     private final Integer reviewId;
     private String content;
-    @NonNull
-    private boolean isPositive;
-    @NonNull
+    private Boolean isPositive;
     private final Integer userId;
-    @NonNull
     private final Integer filmId;
-
     private final Integer useful = 0;
+
 
     @Override
     public boolean equals(Object o) {
