@@ -9,4 +9,5 @@ public class Constants {
     public static final String RATING_NOT_FOUND = "Рейтинга с id %s не существует";
     public static final String GENRE_NOT_FOUND = "Жанра с id %s не существует";
     public static final String ID_NOT_POSITIVE = "Id может быть только положительным";
+    public static final String DIRECTOR_NOT_FOUND = "Режиссера с id %s не существует";
 }

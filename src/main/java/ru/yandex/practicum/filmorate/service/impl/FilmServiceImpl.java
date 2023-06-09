@@ -24,6 +24,7 @@ public class FilmServiceImpl implements FilmService {
     private final GenreStorage genreStorage;
     private final RatingStorage ratingStorage;
     private final UserStorage userStorage;
+    private final DirectorStorage directorStorage;
 
     @Override
     public Film like(Integer id, Integer userId) {
@@ -92,6 +93,13 @@ public class FilmServiceImpl implements FilmService {
         return filmStorage.getById(id).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, id))
         );
+    }
+
+    @Override
+    public List<Film> getAllFilmsOfDirector(Integer id, String sortBy) {
+        directorStorage.getById(id).orElseThrow(() ->
+                new NotFoundException(String.format(DIRECTOR_NOT_FOUND, id)));
+        return filmStorage.getAllFilmsOfDirector(id, sortBy);
     }
 
     private void checkRatingFilm(Film film) {

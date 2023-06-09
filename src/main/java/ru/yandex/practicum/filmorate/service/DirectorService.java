@@ -11,7 +11,7 @@ public interface DirectorService {
 
     Director update(Director director);
 
-    boolean delete(Integer id);
+    void delete(Integer id);
 
     Director getById(Integer id);
 }
