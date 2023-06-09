@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.*;
@@ -55,6 +56,12 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
         if (genreId != null) {
             GenreValidate.validateId(genreId);
+            genreStorage.getById(genreId).orElseThrow(
+                    () -> new NotFoundException(String.format(GENRE_NOT_FOUND, genreId))
+            );
+        }
+        if (year != null && year < 1895) {
+            throw new ValidationException("Дата релиза — не раньше 1895 года");
         }
         return likesStorage.getPopularFilms(count, genreId, year);
     }
