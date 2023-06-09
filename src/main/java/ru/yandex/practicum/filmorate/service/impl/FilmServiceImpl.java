@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.*;
 import ru.yandex.practicum.filmorate.validators.FilmValidate;
+import ru.yandex.practicum.filmorate.validators.GenreValidate;
 import ru.yandex.practicum.filmorate.validators.UserValidate;
 
 import java.util.List;
@@ -51,8 +52,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getPopularFilms(Integer count) {
-        return likesStorage.getPopularFilms(count);
+    public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        if (genreId != null) {
+            GenreValidate.validateId(genreId);
+        }
+        return likesStorage.getPopularFilms(count, genreId, year);
     }
 
     @Override

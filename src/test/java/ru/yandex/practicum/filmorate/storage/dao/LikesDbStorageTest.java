@@ -45,9 +45,33 @@ class LikesDbStorageTest {
 
     @Test
     void getPopularFilms() {
-        List<Film> popularFilms = likesDbStorage.getPopularFilms(2);
-        assertThat(popularFilms).hasSize(2);
+        /** All Popular */
+        List<Film> popularFilms = likesDbStorage.getPopularFilms(5, null, null);
+        System.out.println(popularFilms);
+        assertThat(popularFilms).hasSize(5);
+        assertThat(popularFilms).contains(filmDbStorage.getById(2).get());
+        assertThat(popularFilms).contains(filmDbStorage.getById(3).get());
+
+        /** Most Popular */
+        popularFilms = likesDbStorage.getPopularFilms(1, null, null);
+        assertThat(popularFilms).hasSize(1);
         assertThat(popularFilms).contains(filmDbStorage.getById(1).get());
+
+        /** Popular By Year */
+        popularFilms = likesDbStorage.getPopularFilms(5, null, 1994);
+        assertThat(popularFilms).hasSize(2);
+        assertThat(popularFilms).contains(filmDbStorage.getById(2).get());
+        assertThat(popularFilms).contains(filmDbStorage.getById(3).get());
+
+        /** Popular By Genre */
+        popularFilms = likesDbStorage.getPopularFilms(5, 6, null);
+        assertThat(popularFilms).hasSize(2);
+        assertThat(popularFilms).contains(filmDbStorage.getById(3).get());
         assertThat(popularFilms).contains(filmDbStorage.getById(5).get());
+
+        /** Popular By Year and Genre */
+        popularFilms = likesDbStorage.getPopularFilms(5, 3, 1994);
+        assertThat(popularFilms).hasSize(1);
+        assertThat(popularFilms).contains(filmDbStorage.getById(2).get());
     }
 }
