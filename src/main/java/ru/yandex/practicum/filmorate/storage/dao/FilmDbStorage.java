@@ -156,7 +156,7 @@ public class FilmDbStorage implements FilmStorage {
                 jdbcTemplate.query(sortByYear, this::makeFilm, id);
     }
 
-    protected Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
+    public Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
         return Film.builder()
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))

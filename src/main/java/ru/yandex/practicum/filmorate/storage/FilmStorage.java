@@ -18,4 +18,5 @@ public interface FilmStorage {
     Optional<Film> getById(Integer id);
 
     List<Film> getAllFilmsOfDirector(Integer id, String sortBy);
+
 }

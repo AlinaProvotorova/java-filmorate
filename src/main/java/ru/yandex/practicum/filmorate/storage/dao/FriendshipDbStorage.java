@@ -15,8 +15,8 @@ import java.util.List;
 @Slf4j
 public class FriendshipDbStorage extends UserDbStorage implements FriendshipStorage {
 
-    public FriendshipDbStorage(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    public FriendshipDbStorage(JdbcTemplate jdbcTemplate, FilmDbStorage filmDbStorage) {
+        super(jdbcTemplate, filmDbStorage);
     }
 
     @Override

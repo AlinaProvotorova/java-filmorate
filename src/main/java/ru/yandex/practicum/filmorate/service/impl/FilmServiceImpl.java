@@ -3,11 +3,13 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.*;
 import ru.yandex.practicum.filmorate.validators.FilmValidate;
+import ru.yandex.practicum.filmorate.validators.GenreValidate;
 import ru.yandex.practicum.filmorate.validators.UserValidate;
 
 import java.util.List;
@@ -54,8 +56,17 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getPopularFilms(Integer count) {
-        return likesStorage.getPopularFilms(count);
+    public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        if (genreId != null) {
+            GenreValidate.validateId(genreId);
+            genreStorage.getById(genreId).orElseThrow(
+                    () -> new NotFoundException(String.format(GENRE_NOT_FOUND, genreId))
+            );
+        }
+        if (year != null && year < 1895) {
+            throw new ValidationException("Дата релиза — не раньше 1895 года");
+        }
+        return likesStorage.getPopularFilms(count, genreId, year);
     }
 
     @Override
@@ -104,6 +115,17 @@ public class FilmServiceImpl implements FilmService {
         directorStorage.getById(id).orElseThrow(() ->
                 new NotFoundException(String.format(DIRECTOR_NOT_FOUND, id)));
         return filmStorage.getAllFilmsOfDirector(id, sortBy);
+    }
+
+    @Override
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        UserValidate.validateId(userId);
+        UserValidate.validateId(friendId);
+        userStorage.getById(userId).orElseThrow(
+                () -> new NotFoundException(String.format(USER_NOT_FOUND, userId)));
+        userStorage.getById(friendId).orElseThrow(
+                () -> new NotFoundException(String.format(USER_NOT_FOUND, friendId)));
+        return likesStorage.getCommonFilms(userId, friendId);
     }
 
     private void checkRatingFilm(Film film) {
