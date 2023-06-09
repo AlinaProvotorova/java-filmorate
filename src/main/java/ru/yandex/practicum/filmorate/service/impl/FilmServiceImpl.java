@@ -129,8 +129,8 @@ public class FilmServiceImpl implements FilmService {
     private void checkDirectorsFilm(Set<Director> directors) {
         if (directors != null && !directors.isEmpty()) {
             directors.stream().forEach(director ->
-                directorStorage.getById(director.getId()).orElseThrow(() ->
-                        new NotFoundException(String.format(DIRECTOR_NOT_FOUND, director.getId())))
+                    directorStorage.getById(director.getId()).orElseThrow(() ->
+                            new NotFoundException(String.format(DIRECTOR_NOT_FOUND, director.getId())))
             );
         }
     }
