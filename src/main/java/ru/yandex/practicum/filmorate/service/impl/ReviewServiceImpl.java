@@ -24,8 +24,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review create(Review review) {
-        ReviewValidate.validateId(review.getReviewId());
-
         return reviewStorage.create(review);
     }
 
@@ -85,9 +83,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public String deleteReviewById(Integer id) {
+    public void deleteReviewById(Integer id) {
         ReviewValidate.validateId(id);
-
-        return reviewStorage.deleteReviewById(id);
+        reviewStorage.deleteReviewById(id);
     }
 }

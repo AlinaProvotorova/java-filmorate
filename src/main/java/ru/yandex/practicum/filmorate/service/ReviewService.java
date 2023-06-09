@@ -22,6 +22,6 @@ public interface ReviewService {
 
     void deleteDislike(Integer id, Integer userId);
 
-    String deleteReviewById(Integer id);
+    void deleteReviewById(Integer id);
 
 }

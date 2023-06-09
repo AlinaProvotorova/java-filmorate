@@ -14,13 +14,13 @@ public interface ReviewStorage {
 
     Review update(Review review);
 
-    Review addLike(Integer id, Integer userId);
+    void addLike(Integer id, Integer userId);
 
-    Review addDisLike(Integer id, Integer userId);
+    void addDisLike(Integer id, Integer userId);
 
     void deleteLike(Integer id, Integer userId);
 
     void deleteDisLike(Integer id, Integer userId);
 
-    String deleteReviewById(Integer id);
+    void deleteReviewById(Integer id);
 }

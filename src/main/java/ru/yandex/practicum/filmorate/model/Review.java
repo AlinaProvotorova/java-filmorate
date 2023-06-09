@@ -10,7 +10,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Review {
 
-    private final Integer reviewId;
+    private Integer reviewId;
     private String content;
     private Boolean isPositive;
     private final Integer userId;
