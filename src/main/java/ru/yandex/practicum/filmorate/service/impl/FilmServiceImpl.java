@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.*;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.filmorate.validators.FilmValidate;
 import ru.yandex.practicum.filmorate.validators.UserValidate;
 
 import java.util.List;
+import java.util.Set;
 
 import static ru.yandex.practicum.filmorate.validators.Constants.*;
 
@@ -66,6 +68,7 @@ public class FilmServiceImpl implements FilmService {
         FilmValidate.validateFilm(film);
         checkRatingFilm(film);
         checkGenresFilm(film);
+        checkDirectorsFilm(film.getDirectors());
         return filmStorage.create(film);
     }
 
@@ -75,6 +78,7 @@ public class FilmServiceImpl implements FilmService {
         FilmValidate.validateFilm(film);
         checkRatingFilm(film);
         checkGenresFilm(film);
+        checkDirectorsFilm(film.getDirectors());
         return filmStorage.update(film).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, film.getId()))
         );
@@ -118,6 +122,15 @@ public class FilmServiceImpl implements FilmService {
                             .orElseThrow(() -> new NotFoundException(
                                     String.format(GENRE_NOT_FOUND, genre.getId())
                             ))
+            );
+        }
+    }
+
+    private void checkDirectorsFilm(Set<Director> directors) {
+        if (directors != null && !directors.isEmpty()) {
+            directors.stream().forEach(director ->
+                directorStorage.getById(director.getId()).orElseThrow(() ->
+                        new NotFoundException(String.format(DIRECTOR_NOT_FOUND, director.getId())))
             );
         }
     }
