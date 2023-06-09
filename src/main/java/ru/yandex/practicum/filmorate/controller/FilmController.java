@@ -33,6 +33,12 @@ public class FilmController {
         return service.getAll();
     }
 
+    @GetMapping("director/{directorId}")
+    public List<Film> getAllDirectorsFilms(@PathVariable("directorId") Integer id,
+                                           @RequestParam("sortBy") List<String> sortsBy) {
+        return service.getAllFilmsOfDirector(id, sortsBy.get(0));
+    }
+
     @PostMapping
     public Film create(@RequestBody Film film) {
         return service.create(film);
