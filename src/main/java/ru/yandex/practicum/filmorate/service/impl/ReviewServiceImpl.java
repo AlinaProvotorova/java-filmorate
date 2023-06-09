@@ -49,19 +49,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review addLike(Integer id, Integer userId) {
+    public void addLike(Integer id, Integer userId) {
         ReviewValidate.validateId(id);
         UserValidate.validateId(userId);
 
-        return reviewStorage.addLike(id, userId);
+        reviewStorage.addLike(id, userId);
     }
 
     @Override
-    public Review addDislike(Integer id, Integer userId) {
+    public void addDislike(Integer id, Integer userId) {
         ReviewValidate.validateId(id);
         UserValidate.validateId(userId);
 
-        return reviewStorage.addDisLike(id, userId);
+        reviewStorage.addDisLike(id, userId);
     }
 
     @Override
