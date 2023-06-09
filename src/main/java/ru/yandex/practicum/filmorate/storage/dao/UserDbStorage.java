@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -24,6 +25,8 @@ import java.util.Optional;
 @Slf4j
 public class UserDbStorage implements UserStorage {
     protected final JdbcTemplate jdbcTemplate;
+    private final FilmDbStorage filmStorage;
+
 
     @Override
     public List<User> getAll() {
@@ -74,6 +77,18 @@ public class UserDbStorage implements UserStorage {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Film> recommendations(Integer id) {
+        String sql = "SELECT f.* FROM film f JOIN (" +
+                "SELECT DISTINCT lf.FILM_ID FROM LIKES_FILM lf WHERE lf.USER_ID = (" +
+                "SELECT lf2.USER_ID FROM LIKES_FILM lf2 WHERE lf2.USER_ID <> ? AND lf2.FILM_ID IN (" +
+                "SELECT FILM_ID FROM LIKES_FILM WHERE USER_ID = ?) " +
+                "GROUP BY lf2.USER_ID ORDER BY COUNT(*) DESC LIMIT 1) AND lf.FILM_ID NOT IN (" +
+                "SELECT FILM_ID FROM LIKES_FILM WHERE USER_ID = ?)" +
+                ") lf ON lf.FILM_ID = f.ID ";
+        return jdbcTemplate.query(sql, filmStorage::makeFilm, id, id, id);
     }
 
 
