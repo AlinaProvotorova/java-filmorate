@@ -34,7 +34,7 @@ public class ReviewDbStorage implements ReviewStorage {
         ReviewValidate.validateReview(review);
         log.info("Получен запрос на создание отзыва");
 
-        String sql = "INSERT INTO reviews_film (content, is_Positive, user_id, film_id) " +
+        String sql = "INSERT INTO reviews (content, is_positive, user_id, film_id) " +
                 "VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -58,6 +58,12 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public Review getReviewById(Integer id) {
+        String sql = "SELECT reviews.* FROM reviews " +
+                "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
+                "WHERE id=? " +
+                "ORDER BY useful DESC " +
+                "LIMIT ? ";
+        return jdbcTemplate.query(sql, reviewMapper, count);
 
 
 
@@ -66,7 +72,26 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public List<Review> getReviewByFilmId(Integer filmId, Integer count) {
-        return null;
+        if (filmId == null) {
+            String sql = "SELECT reviews.*, COALESCE(SUM(review_likes.useful), 0) AS useful " +
+                    "FROM  reviews " +
+                    "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
+                    "GROUP BY reviews.ID " +
+                    "ORDER BY useful DESC " +
+                    "LIMIT ? ";
+            return jdbcTemplate.query(sql, reviewMapper, count);
+        } else {
+            String sql = "SELECT reviews.*, SUM(review_likes.useful) AS useful " +
+                    "FROM  reviews " +
+                    "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
+                    "GROUP BY reviews.ID " +
+                    "HAVING film_id = ? " +
+                    "ORDER BY useful DESC " +
+                    "LIMIT ?";
+            return jdbcTemplate.query(sql, reviewMapper, filmId, count);
+
+        }
+
     }
 
     @Override

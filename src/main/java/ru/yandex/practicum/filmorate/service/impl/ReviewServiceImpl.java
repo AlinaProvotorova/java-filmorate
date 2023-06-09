@@ -36,7 +36,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getReviewByFilmId(Integer filmId, Integer count) {
-        FilmValidate.validateId(filmId);
 
         return reviewStorage.getReviewByFilmId(filmId, count);
     }
