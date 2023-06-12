@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -169,5 +170,41 @@ public class FilmDbStorage implements FilmStorage {
                 )
                 .directors(directorStorage.getDirectorsByFilm(rs.getInt("id")))
                 .build();
+    }
+
+    @Override
+    public List<Film> search(String query, String by) {
+
+        String select = "SELECT f.* FROM film f " +
+                "LEFT JOIN (SELECT film_id, COUNT(user_id) AS likes " +
+                "FROM likes_film " +
+                "GROUP BY film_id) l ON f.id = l.film_id ";
+
+        String byTitle = "UPPER(f.name) LIKE UPPER(CONCAT('%', ?, '%')) ";
+
+        String joinDirector = "LEFT JOIN film_directors fd ON f.id = fd.film_id " +
+                "LEFT JOIN director d ON fd.director_id = d.id ";
+
+        String byDirector = "UPPER(d.name) LIKE UPPER(CONCAT('%', ?, '%')) ";
+
+        String where = "WHERE ";
+        String or = "OR ";
+        String sortByLikes = "ORDER BY l.likes DESC";
+
+        final String searchByTitle = select + where + byTitle + sortByLikes;
+        final String searchByDirector = select + joinDirector + where + byDirector + sortByLikes;
+        final String searchBoth = select + joinDirector + where + byDirector + or + byTitle + sortByLikes;
+
+        switch (by) {
+            case "director":
+                return jdbcTemplate.query(searchByDirector, this::makeFilm, query);
+            case "title":
+                return jdbcTemplate.query(searchByTitle, this::makeFilm, query);
+            case "director,title":
+            case "title,director":
+                return jdbcTemplate.query(searchBoth, this::makeFilm, query, query);
+            default:
+                throw new ValidationException("Некорректные параметры запроса.");
+        }
     }
 }

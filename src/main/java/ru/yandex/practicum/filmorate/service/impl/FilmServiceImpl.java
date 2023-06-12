@@ -156,4 +156,9 @@ public class FilmServiceImpl implements FilmService {
             );
         }
     }
+
+    @Override
+    public List<Film> searchFilms(String queryString, String searchBy) {
+        return filmStorage.search(queryString, searchBy);
+    }
 }
