@@ -65,7 +65,7 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public Review getReviewById(Integer id) {
-        String sql = "SELECT reviews.*, COALESCE(SUM(review_likes.useful), 0) AS useful  FROM reviews " +
+        String sql = "SELECT reviews.*, COALESCE(SUM(review_likes.useful), 0) AS useful FROM reviews " +
                 "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
                 "GROUP BY reviews.id " +
                 "HAVING reviews.id = ?";

@@ -54,7 +54,7 @@ public class ReviewController {
     }
 
     //    PUT /reviews/{id}/dislike/{userId} — пользователь ставит дизлайк отзыву.
-    @PutMapping("/{id}/disLike/{userId}")
+    @PutMapping("/{id}/dislike/{userId}")
     public void addDislike(@PathVariable Integer id, @PathVariable Integer userId) {
         reviewService.addDislike(id, userId);
     }
