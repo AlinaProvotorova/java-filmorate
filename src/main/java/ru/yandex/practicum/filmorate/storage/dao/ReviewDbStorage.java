@@ -89,9 +89,8 @@ public class ReviewDbStorage implements ReviewStorage {
     }
 
     @Override
-    public Optional<List<Review>> getReviewByFilmId(Integer filmId, Integer count) {
+    public List<Review> getReviewByFilmId(Integer filmId, Integer count) {
 
-        if (filmDbStorage.getById(filmId).isPresent()) {
             String sql = "SELECT reviews.*, SUM(review_likes.useful) AS useful " +
                     "FROM  reviews " +
                     "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
@@ -100,12 +99,8 @@ public class ReviewDbStorage implements ReviewStorage {
                     "ORDER BY useful DESC " +
                     "LIMIT ?";
 
-            List<Review> reviewList = jdbcTemplate.query(sql, reviewMapper, filmId, count);
+            return jdbcTemplate.query(sql, reviewMapper, filmId, count);
 
-            return Optional.of(reviewList);
-        }
-
-        return Optional.empty();
     }
 
     @Override

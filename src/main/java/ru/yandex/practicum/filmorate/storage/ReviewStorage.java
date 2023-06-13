@@ -11,7 +11,7 @@ public interface ReviewStorage {
 
     Optional<Review> getReviewById(Integer id);
 
-    Optional<List<Review>> getReviewByFilmId(Integer filmId, Integer count);
+    List<Review> getReviewByFilmId(Integer filmId, Integer count);
     List<Review> getAllReviews(Integer count);
 
     Optional<Review> update(Review review);
