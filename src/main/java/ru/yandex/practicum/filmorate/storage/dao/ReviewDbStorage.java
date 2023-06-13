@@ -9,15 +9,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.ReviewMapper;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
-import ru.yandex.practicum.filmorate.validators.ReviewValidate;
-import ru.yandex.practicum.filmorate.validators.UserValidate;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Primary
@@ -27,18 +25,17 @@ public class ReviewDbStorage implements ReviewStorage {
     private final JdbcTemplate jdbcTemplate;
     private final ReviewMapper reviewMapper;
 
-    public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewMapper reviewMapper) {
+    private final FilmDbStorage filmDbStorage;
+
+    public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewMapper reviewMapper, FilmDbStorage filmDbStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.reviewMapper = reviewMapper;
+        this.filmDbStorage = filmDbStorage;
     }
 
 
     @Override
     public Review create(Review review) {
-        ReviewValidate.validateReview(review);
-        ReviewValidate.validateId(review.getUserId());
-        ReviewValidate.validateId(review.getFilmId());
-
         log.info("Получен запрос на создание отзыва");
 
         String sql = "INSERT INTO reviews (content, is_positive, user_id, film_id) " +
@@ -56,6 +53,7 @@ public class ReviewDbStorage implements ReviewStorage {
 
         if (keyHolder.getKey() != null) {
             review.setReviewId(keyHolder.getKey().intValue());
+            review.setUseful(0);
         }
 
         log.info("Отзыв добавлен в базу");
@@ -64,29 +62,36 @@ public class ReviewDbStorage implements ReviewStorage {
     }
 
     @Override
-    public Review getReviewById(Integer id) {
+    public Optional<Review> getReviewById(Integer id) {
         String sql = "SELECT reviews.*, COALESCE(SUM(review_likes.useful), 0) AS useful FROM reviews " +
                 "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
                 "GROUP BY reviews.id " +
                 "HAVING reviews.id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, reviewMapper, id);
+            Review review = jdbcTemplate.queryForObject(sql, reviewMapper, id);
+            return Optional.ofNullable(review);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("Отзыва с id= " + " нет  в базе");
+            return Optional.empty();
         }
     }
 
+
     @Override
-    public List<Review> getReviewByFilmId(Integer filmId, Integer count) {
-        if (filmId == null) {
-            String sql = "SELECT reviews.*, COALESCE(SUM(review_likes.useful), 0) AS useful " +
-                    "FROM  reviews " +
-                    "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
-                    "GROUP BY reviews.ID " +
-                    "ORDER BY useful DESC " +
-                    "LIMIT ? ";
-            return jdbcTemplate.query(sql, reviewMapper, count);
-        } else {
+    public List<Review> getAllReviews(Integer count) {
+        String sql = "SELECT reviews.*, COALESCE(SUM(review_likes.useful), 0) AS useful " +
+                "FROM  reviews " +
+                "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
+                "GROUP BY reviews.ID " +
+                "ORDER BY useful DESC " +
+                "LIMIT ? ";
+
+        return jdbcTemplate.query(sql, reviewMapper, count);
+    }
+
+    @Override
+    public Optional<List<Review>> getReviewByFilmId(Integer filmId, Integer count) {
+
+        if (filmDbStorage.getById(filmId).isPresent()) {
             String sql = "SELECT reviews.*, SUM(review_likes.useful) AS useful " +
                     "FROM  reviews " +
                     "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
@@ -94,28 +99,32 @@ public class ReviewDbStorage implements ReviewStorage {
                     "HAVING film_id = ? " +
                     "ORDER BY useful DESC " +
                     "LIMIT ?";
-            return jdbcTemplate.query(sql, reviewMapper, filmId, count);
 
+            List<Review> reviewList = jdbcTemplate.query(sql, reviewMapper, filmId, count);
+
+            return Optional.of(reviewList);
         }
 
+        return Optional.empty();
     }
 
     @Override
-    public Review update(Review review) {
+    public Optional<Review> update(Review review) {
         log.info("Обновление отзыва");
 
-        String sql = "UPDATE reviews SET content = ?, is_positive = ? " +
-                "WHERE id= ?";
+        if (getReviewById(review.getReviewId()).isPresent()) {
+            String sql = "UPDATE reviews SET content = ?, is_positive = ? " +
+                    "WHERE id= ?";
 
-        int count = jdbcTemplate.update(sql, review.getContent(), review.getIsPositive(),
-                review.getReviewId());
-        if (count != 1) {
-            throw new NotFoundException("Отзыва с id= " + review.getReviewId() + " нет  в базе");
+            jdbcTemplate.update(sql, review.getContent(), review.getIsPositive(),
+                    review.getReviewId());
+
+            log.info("Отзыв обновлен");
+            return getReviewById(review.getReviewId());
         }
+        return Optional.empty();
 
-        log.info("Отзыв обновлен");
 
-        return getReviewById(review.getReviewId());
     }
 
     @Override
@@ -157,5 +166,13 @@ public class ReviewDbStorage implements ReviewStorage {
         String sql = "DELETE FROM reviews WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+
+    @Override
+    public void deleteAllReviews() {
+        String sql = "DELETE FROM reviews WHERE id IN (SELECT id FROM reviews)";
+
+        jdbcTemplate.update(sql);
     }
 }
