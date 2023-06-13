@@ -43,8 +43,8 @@ public class ReviewController {
 //    PUT /reviews
 //    Редактирование уже имеющегося отзыва.
     @PutMapping
-    public void update(@Valid @RequestBody Review review) {
-        reviewService.update(review);
+    public Review update(@Valid @RequestBody Review review) {
+        return reviewService.update(review);
     }
 
     //    PUT /reviews/{id}/like/{userId} — пользователь ставит лайк отзыву.
