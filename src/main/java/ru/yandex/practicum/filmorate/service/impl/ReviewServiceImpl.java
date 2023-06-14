@@ -70,8 +70,9 @@ public class ReviewServiceImpl implements ReviewService {
     public Review update(Review review) {
         ReviewValidate.validateId(review.getReviewId());
 
-        return reviewStorage.update(review).orElseThrow( () -> new NotFoundException
-                (String.format(REVIEW_NOT_FOUND, review.getReviewId())));
+        return reviewStorage.update(review).orElseThrow(() -> new NotFoundException(
+                String.format(REVIEW_NOT_FOUND, review.getReviewId()))
+        );
     }
 
     @Override
