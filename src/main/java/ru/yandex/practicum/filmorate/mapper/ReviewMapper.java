@@ -18,10 +18,9 @@ public class ReviewMapper implements RowMapper<Review> {
         String content = rs.getString("content");
         Boolean isPositive = rs.getBoolean("is_positive");
         Integer userId = rs.getInt("user_id");
-        Integer filmId = rs.getInt("film_id");;
+        Integer filmId = rs.getInt("film_id");
         Integer useful = rs.getInt("useful");
 
-
-        return new Review(id,content,isPositive,userId,filmId,useful);
+        return new Review(id, content, isPositive, userId, filmId, useful);
     }
 }
