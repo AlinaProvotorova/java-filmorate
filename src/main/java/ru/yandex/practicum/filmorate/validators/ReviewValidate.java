@@ -17,6 +17,7 @@ public class ReviewValidate {
         if (review.getIsPositive() == null) {
             throw new ValidationException("Позитив не может быть пустым");
         }
+
         if (review.getUserId() == null) {
             throw new ValidationException("UserId не может быть пустым");
         }
