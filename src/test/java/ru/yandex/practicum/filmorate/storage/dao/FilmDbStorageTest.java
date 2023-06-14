@@ -75,5 +75,11 @@ class FilmDbStorageTest {
                 );
     }
 
+    @Test
+    void testGetAllDirectorFilms() {
+        List<Film> likes = filmDbStorage.getAllFilmsOfDirector(1, "likes");
+        assertThat(likes).hasSize(1);
+    }
+
 
 }

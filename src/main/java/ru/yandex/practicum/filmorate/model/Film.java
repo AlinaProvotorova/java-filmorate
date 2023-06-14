@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Builder
 @Data
@@ -19,7 +17,7 @@ public class Film {
     private Integer duration;
     private Set<Genre> genres;
     private Rating mpa;
-
+    private Set<Director> directors;
 
     public Map<String, Object> toMap() {
         Map<String, Object> values = new HashMap<>();
