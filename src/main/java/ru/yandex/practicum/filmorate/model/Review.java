@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.Objects;
@@ -10,12 +11,12 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Review {
 
-    private final Integer reviewId;
+    private Integer reviewId;
     private String content;
     private Boolean isPositive;
     private final Integer userId;
     private final Integer filmId;
-    private final Integer useful = 0;
+    private Integer useful;
 
 
     @Override

@@ -6,6 +6,9 @@ alter table film alter COLUMN id RESTART with 1;
 delete from users;
 alter table users alter COLUMN id RESTART with 1;
 
+delete from reviews;
+alter table reviews alter COLUMN id RESTART with 1;
+
 insert into users (login, email, name, birthday) values ('Alina', 'alina@y.ru', 'Алина', '1997-01-14');
 insert into users (login, email, name, birthday) values ('Stas', 'stas@y.ru', 'Стас', '1997-03-15');
 insert into users (login, email, name, birthday) values ('Ylia', 'ylia@y.ru', 'Юля', '1997-03-16');

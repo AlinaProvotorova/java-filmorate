@@ -36,8 +36,8 @@ public class ReviewController {
 //    Получение всех отзывов по идентификатору фильма, если фильм не указан то все. Если кол-во не указано то 10.
     @GetMapping
     public List<Review> getReviewByFilmId(@RequestParam(required = false) Integer filmId,
-                                    @RequestParam(required = false, defaultValue = "10") Integer count) {
-        return  reviewService.getReviewByFilmId(filmId, count);
+                                          @RequestParam(required = false, defaultValue = "10") Integer count) {
+        return reviewService.getReviewByFilmId(filmId, count);
     }
 
 //    PUT /reviews
@@ -49,14 +49,14 @@ public class ReviewController {
 
     //    PUT /reviews/{id}/like/{userId} — пользователь ставит лайк отзыву.
     @PutMapping("/{id}/like/{userId}")
-    public Review addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        return reviewService.addLike(id, userId);
+    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        reviewService.addLike(id, userId);
     }
 
     //    PUT /reviews/{id}/dislike/{userId} — пользователь ставит дизлайк отзыву.
-    @PutMapping("/{id}/disLike/{userId}")
-    public Review addDislike(@PathVariable Integer id, @PathVariable Integer userId) {
-        return reviewService.addDislike(id, userId);
+    @PutMapping("/{id}/dislike/{userId}")
+    public void addDislike(@PathVariable Integer id, @PathVariable Integer userId) {
+        reviewService.addDislike(id, userId);
     }
 
     //    DELETE /reviews/{id}/like/{userId} — пользователь удаляет лайк/дизлайк отзыву.

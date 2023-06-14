@@ -9,6 +9,11 @@ import static ru.yandex.practicum.filmorate.validators.Constants.ID_NOT_POSITIVE
 public class ReviewValidate {
 
     public static void validateReview(Review review) {
+
+        if (review.getContent() == null ) {
+            throw new ValidationException("Контент не может быть пустым");
+        }
+
         if (review.getIsPositive() == null ) {
             throw new ValidationException("Позитив не может быть пустым");
         }
