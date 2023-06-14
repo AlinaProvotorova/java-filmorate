@@ -11,9 +11,11 @@ public interface LikesStorage {
 
     Optional<Film> dislike(Integer id, Integer userId);
 
-    List<Film> getPopularFilms(Integer count);
+    List<Film> getPopularFilms(Integer count, Integer genreId, Integer year);
 
     List<User> getLikesByFilm(Integer filmId);
 
     List<Film> getFavoriteFilmsByUser(Integer userId);
+
+    List<Film> getCommonFilms(Integer userId, Integer friendId);
 }

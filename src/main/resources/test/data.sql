@@ -1,6 +1,9 @@
 delete from friendship;
 delete from film_genre;
 delete from likes_film;
+delete from director;
+alter table director alter COLUMN id RESTART with 1;
+delete from film_directors;
 delete from film;
 alter table film alter COLUMN id RESTART with 1;
 delete from users;
@@ -73,3 +76,18 @@ insert into film_genre (film_id, genre_id) values (5, 2);
 insert into film_genre (film_id, genre_id) values (5, 1);
 insert into film_genre (film_id, genre_id) values (5, 6);
 
+insert into director (name)
+values ('Фрэнк Дарабонт'),
+       ('Фрэнк Дарабонт'),
+       ('Роберт Земекис'),
+       ('Ли Анкрич'), -- тайна коко
+       ('Эдриан Молина'), -- тайна коко
+       ('Питер Джексон');
+
+insert into film_directors (film_id, director_id)
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (4, 5),
+       (5, 6);

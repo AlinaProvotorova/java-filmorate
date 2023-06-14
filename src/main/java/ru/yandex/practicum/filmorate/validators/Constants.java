@@ -10,4 +10,5 @@ public class Constants {
 
     public static final String REVIEW_NOT_FOUND = "Отзыва с id %s не существует";
 
+    public static final String DIRECTOR_NOT_FOUND = "Режиссера с id %s не существует";
 }
