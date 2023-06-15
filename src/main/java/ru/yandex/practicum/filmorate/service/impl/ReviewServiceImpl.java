@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.ReviewService;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -22,11 +23,16 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
     private final FilmStorage filmDbStorage;
     private final UserStorage userDbStorage;
+    private final FeedStorage feedStorage;
 
-    public ReviewServiceImpl(ReviewStorage reviewStorage, FilmStorage filmDbStorage, UserStorage userDbStorage) {
+    public ReviewServiceImpl(ReviewStorage reviewStorage,
+                             FilmStorage filmDbStorage,
+                             UserStorage userDbStorage,
+                             FeedStorage feedStorage) {
         this.reviewStorage = reviewStorage;
         this.filmDbStorage = filmDbStorage;
         this.userDbStorage = userDbStorage;
+        this.feedStorage = feedStorage;
     }
 
 
@@ -39,8 +45,9 @@ public class ReviewServiceImpl implements ReviewService {
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, review.getUserId())));
         filmDbStorage.getById(review.getFilmId()).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, review.getFilmId())));
-
-        return reviewStorage.create(review);
+        Review reviewWithId = reviewStorage.create(review);
+        feedStorage.create(review.getUserId(), reviewWithId.getReviewId(), "REVIEW", "ADD");
+        return reviewWithId;
     }
 
     @Override
@@ -69,7 +76,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review update(Review review) {
         ReviewValidate.validateId(review.getReviewId());
-
+        Review reviewWithId = getReviewById(review.getReviewId());
+        feedStorage.create(reviewWithId.getUserId(), reviewWithId.getReviewId(), "REVIEW", "UPDATE");
         return reviewStorage.update(review).orElseThrow(() -> new NotFoundException(
                 String.format(REVIEW_NOT_FOUND, review.getReviewId()))
         );
@@ -127,8 +135,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReviewById(Integer id) {
         ReviewValidate.validateId(id);
-        getReviewById(id);
+        Review review = getReviewById(id);
 
+        feedStorage.create(review.getUserId(), review.getReviewId(), "REVIEW", "REMOVE");
         reviewStorage.deleteReviewById(id);
     }
 }

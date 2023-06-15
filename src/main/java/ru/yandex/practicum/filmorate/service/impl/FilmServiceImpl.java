@@ -29,6 +29,7 @@ public class FilmServiceImpl implements FilmService {
     private final RatingStorage ratingStorage;
     private final UserStorage userStorage;
     private final DirectorStorage directorStorage;
+    private final FeedStorage feedStorage;
 
     @Override
     public Film like(Integer id, Integer userId) {
@@ -37,7 +38,8 @@ public class FilmServiceImpl implements FilmService {
         userStorage.getById(userId).orElseThrow(
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, userId))
         );
-
+        getById(id);
+        feedStorage.create(userId, id, "LIKE", "ADD");
         return likesStorage.like(id, userId).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, id))
         );
@@ -50,6 +52,8 @@ public class FilmServiceImpl implements FilmService {
         userStorage.getById(userId).orElseThrow(
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, userId))
         );
+        getById(id);
+        feedStorage.create(userId, id, "LIKE", "REMOVE");
         return likesStorage.dislike(id, userId).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, id))
         );
