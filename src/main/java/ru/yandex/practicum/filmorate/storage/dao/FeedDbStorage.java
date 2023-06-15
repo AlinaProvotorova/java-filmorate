@@ -37,7 +37,7 @@ public class FeedDbStorage implements FeedStorage {
 
     @Override
     public List<Event> getByUserId(Integer userId) {
-        String sql = "select * from event_feed where user_id = ? order by timestamp desc";
+        String sql = "select * from event_feed where user_id = ?";
         return jdbcTemplate.query(sql, this::makeEvent, userId);
     }
 
