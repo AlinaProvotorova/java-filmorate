@@ -62,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (filmId == null) {
             return reviewStorage.getAllReviews(count);
-        } else  {
+        } else {
             ReviewValidate.validateId(filmId);
 
             if (filmDbStorage.getById(filmId).isPresent()) {
@@ -129,7 +129,7 @@ public class ReviewServiceImpl implements ReviewService {
         userDbStorage.getById(userId).orElseThrow(
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, userId)));
 
-        reviewStorage.deleteDisLike(reviewId,userId);
+        reviewStorage.deleteDisLike(reviewId, userId);
     }
 
     @Override

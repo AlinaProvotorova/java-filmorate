@@ -18,21 +18,21 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-//    POST /reviews
+    //    POST /reviews
 //    Добавление нового отзыва.
     @PostMapping
     public Review create(@Valid @RequestBody Review review) {
         return reviewService.create(review);
     }
 
-//    GET /reviews/{id}
+    //    GET /reviews/{id}
 //    Получение отзыва по идентификатору.
     @GetMapping("/{id}")
     public Review getReviewById(@PathVariable Integer id) {
         return reviewService.getReviewById(id);
     }
 
-//    GET /reviews?filmId={filmId}&count={count}
+    //    GET /reviews?filmId={filmId}&count={count}
 //    Получение всех отзывов по идентификатору фильма, если фильм не указан то все. Если кол-во не указано то 10.
     @GetMapping
     public List<Review> getReviewByFilmId(@RequestParam(required = false) Integer filmId,
@@ -40,7 +40,7 @@ public class ReviewController {
         return reviewService.getReviewByFilmId(filmId, count);
     }
 
-//    PUT /reviews
+    //    PUT /reviews
 //    Редактирование уже имеющегося отзыва.
     @PutMapping
     public Review update(@Valid @RequestBody Review review) {
@@ -71,7 +71,7 @@ public class ReviewController {
         reviewService.deleteDislike(id, userId);
     }
 
-//    DELETE /reviews/{id}
+    //    DELETE /reviews/{id}
 //    Удаление уже имеющегося отзыва.
     @DeleteMapping("/{id}")
     public String deleteReviewById(@PathVariable Integer id) {

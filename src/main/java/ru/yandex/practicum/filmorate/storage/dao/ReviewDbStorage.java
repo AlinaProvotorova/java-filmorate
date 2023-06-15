@@ -43,7 +43,7 @@ public class ReviewDbStorage implements ReviewStorage {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement prepareStatement = connection.prepareStatement(sql, new String[]{"id"});
-            prepareStatement.setString(1,review.getContent());
+            prepareStatement.setString(1, review.getContent());
             prepareStatement.setBoolean(2, review.getIsPositive());
             prepareStatement.setInt(3, review.getUserId());
             prepareStatement.setInt(4, review.getFilmId());
@@ -90,15 +90,15 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public List<Review> getReviewByFilmId(Integer filmId, Integer count) {
 
-            String sql = "SELECT reviews.*, SUM(review_likes.useful) AS useful " +
-                    "FROM  reviews " +
-                    "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
-                    "GROUP BY reviews.ID " +
-                    "HAVING film_id = ? " +
-                    "ORDER BY useful DESC " +
-                    "LIMIT ?";
+        String sql = "SELECT reviews.*, SUM(review_likes.useful) AS useful " +
+                "FROM  reviews " +
+                "LEFT JOIN review_likes ON reviews.id = review_likes.review_id " +
+                "GROUP BY reviews.ID " +
+                "HAVING film_id = ? " +
+                "ORDER BY useful DESC " +
+                "LIMIT ?";
 
-            return jdbcTemplate.query(sql, reviewMapper, filmId, count);
+        return jdbcTemplate.query(sql, reviewMapper, filmId, count);
 
     }
 
