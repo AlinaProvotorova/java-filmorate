@@ -44,7 +44,7 @@ public class ReviewDbStorageTest {
     @Test
     void testCreateReview() {
         Review newReview = reviewDbStorage.create(testReview);
-        assertEquals(testReview,newReview);
+        assertEquals(testReview, newReview);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ReviewDbStorageTest {
         reviewDbStorage.create(testReview);
         List<Review> reviewList = reviewDbStorage.getAllReviews(1);
 
-        assertEquals(List.of(testReview),reviewList);
+        assertEquals(List.of(testReview), reviewList);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ReviewDbStorageTest {
         Review review = reviewDbStorage.create(testReview);
         Optional<Review> reviewFromDataBase = reviewDbStorage.getReviewById(1);
 
-        assertEquals(Optional.of(review),reviewFromDataBase);
+        assertEquals(Optional.of(review), reviewFromDataBase);
     }
 
     @Test
@@ -68,18 +68,18 @@ public class ReviewDbStorageTest {
         Review review = reviewDbStorage.create(testReview);
         review.setContent("NewContent");
 
-        Optional<Review> updatedReview  = reviewDbStorage.update(review);
+        Optional<Review> updatedReview = reviewDbStorage.update(review);
 
-        assertEquals(Optional.of(review),updatedReview);
+        assertEquals(Optional.of(review), updatedReview);
     }
 
     @Test
     void deleteReviewById() {
         reviewDbStorage.create(testReview);
 
-        assertEquals(reviewDbStorage.getAllReviews(1).size(),1);
+        assertEquals(reviewDbStorage.getAllReviews(1).size(), 1);
 
         reviewDbStorage.deleteReviewById(1);
-        assertEquals(reviewDbStorage.getAllReviews(1).size(),0);
+        assertEquals(reviewDbStorage.getAllReviews(1).size(), 0);
     }
 }
