@@ -3,9 +3,11 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validators.UserValidate;
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserStorage userStorage;
     private final FriendshipStorage friendshipStorage;
+    private final FeedStorage feedStorage;
 
     @Override
     public List<User> getAll() {
@@ -65,8 +68,13 @@ public class UserServiceImpl implements UserService {
         UserValidate.validateId(userId);
         UserValidate.validateId(friendId);
         if (!friendshipStorage.deleteFriend(userId, friendId)) {
-            throw new NotFoundException(String.format("Дружбы между пользователями %s и %s не существует", userId, friendId));
+            throw new NotFoundException(String.format(
+                    "Дружбы между пользователями %s и %s не существует",
+                    userId,
+                    friendId)
+            );
         }
+        feedStorage.create(userId, friendId, "FRIEND", "REMOVE");
     }
 
     @Override
@@ -103,6 +111,7 @@ public class UserServiceImpl implements UserService {
         getById(userId);
         getById(friendId);
         friendshipStorage.sendFriendshipRequest(userId, friendId);
+        feedStorage.create(userId, friendId, "FRIEND", "ADD");
     }
 
     @Override
@@ -130,5 +139,12 @@ public class UserServiceImpl implements UserService {
         getById(userId);
         getById(friendId);
         return friendshipStorage.getFriendsOfFriend(userId, friendId);
+    }
+
+    @Override
+    public List<Event> getFeed(Integer userId) {
+        UserValidate.validateId(userId);
+        getById(userId);
+        return feedStorage.getByUserId(userId);
     }
 }
