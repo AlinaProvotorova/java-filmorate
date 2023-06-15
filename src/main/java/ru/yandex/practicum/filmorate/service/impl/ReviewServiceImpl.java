@@ -45,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, review.getUserId())));
         filmDbStorage.getById(review.getFilmId()).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, review.getFilmId())));
-        feedStorage.create(review.getUserId(), review.getReviewId(), "REVIEW", "ADD");
+        feedStorage.create(review.getUserId(), review.getFilmId(), "REVIEW", "ADD");
         return reviewStorage.create(review);
     }
 
@@ -76,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Review update(Review review) {
         ReviewValidate.validateId(review.getReviewId());
 
-        feedStorage.create(review.getUserId(), review.getReviewId(), "REVIEW", "UPDATE");
+        feedStorage.create(review.getUserId(), review.getFilmId(), "REVIEW", "UPDATE");
         return reviewStorage.update(review).orElseThrow(() -> new NotFoundException(
                 String.format(REVIEW_NOT_FOUND, review.getReviewId()))
         );
@@ -136,7 +136,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewValidate.validateId(id);
         Review review = getReviewById(id);
 
-        feedStorage.create(review.getUserId(), review.getReviewId(), "REVIEW", "REMOVE");
+        feedStorage.create(review.getUserId(), review.getFilmId(), "REVIEW", "REMOVE");
         reviewStorage.deleteReviewById(id);
     }
 }
