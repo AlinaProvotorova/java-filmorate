@@ -17,19 +17,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Primary
 @Slf4j
 public class ReviewDbStorage implements ReviewStorage {
-
     private final JdbcTemplate jdbcTemplate;
     private final ReviewMapper reviewMapper;
 
-    private final FilmDbStorage filmDbStorage;
 
     public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewMapper reviewMapper, FilmDbStorage filmDbStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.reviewMapper = reviewMapper;
-        this.filmDbStorage = filmDbStorage;
     }
 
 
