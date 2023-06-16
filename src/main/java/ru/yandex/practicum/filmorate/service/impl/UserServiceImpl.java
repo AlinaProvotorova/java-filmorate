@@ -3,9 +3,7 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
-import ru.yandex.practicum.filmorate.model.Event;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
@@ -74,7 +72,7 @@ public class UserServiceImpl implements UserService {
                     friendId)
             );
         }
-        feedStorage.create(userId, friendId, "FRIEND", "REMOVE");
+        feedStorage.create(userId, friendId, EventType.FRIEND, EventOperation.REMOVE);
     }
 
     @Override
@@ -111,7 +109,7 @@ public class UserServiceImpl implements UserService {
         getById(userId);
         getById(friendId);
         friendshipStorage.sendFriendshipRequest(userId, friendId);
-        feedStorage.create(userId, friendId, "FRIEND", "ADD");
+        feedStorage.create(userId, friendId, EventType.FRIEND, EventOperation.ADD);
     }
 
     @Override

@@ -17,8 +17,8 @@ public class Event {
     private int userId;
     private int entityId;
     private Timestamp timestamp;
-    private String eventType;
-    private String operation;
+    private EventType eventType;
+    private EventOperation operation;
 
     @JsonGetter("timestamp")
     public Long getTimestamp() {
@@ -30,8 +30,8 @@ public class Event {
         values.put("user_id", userId);
         values.put("entity_id", entityId);
         values.put("timestamp", timestamp);
-        values.put("event_type", eventType);
-        values.put("operation", operation);
+        values.put("event_type", eventType.getName());
+        values.put("operation", operation.getName());
         return values;
     }
 }

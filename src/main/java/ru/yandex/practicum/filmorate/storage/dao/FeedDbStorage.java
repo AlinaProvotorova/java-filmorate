@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.EventOperation;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.storage.FeedStorage;
 
 import java.sql.ResultSet;
@@ -21,7 +23,7 @@ public class FeedDbStorage implements FeedStorage {
     protected final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void create(Integer userId, Integer entityId, String eventType, String operation) {
+    public void create(Integer userId, Integer entityId, EventType eventType, EventOperation operation) {
         Event event = Event.builder()
                 .userId(userId)
                 .timestamp(new Timestamp(System.currentTimeMillis()))
@@ -46,8 +48,8 @@ public class FeedDbStorage implements FeedStorage {
                 .eventId(rs.getInt("id"))
                 .userId(rs.getInt("user_id"))
                 .timestamp(rs.getTimestamp("timestamp"))
-                .eventType(rs.getString("event_type"))
-                .operation(rs.getString("operation"))
+                .eventType(EventType.valueOf(rs.getString("event_type")))
+                .operation(EventOperation.valueOf(rs.getString("operation")))
                 .entityId(rs.getInt("entity_id"))
                 .build();
     }

@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.model.EventOperation;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.*;
 import ru.yandex.practicum.filmorate.validators.FilmValidate;
@@ -39,7 +41,7 @@ public class FilmServiceImpl implements FilmService {
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, userId))
         );
         getById(id);
-        feedStorage.create(userId, id, "LIKE", "ADD");
+        feedStorage.create(userId, id, EventType.LIKE, EventOperation.ADD);
         return likesStorage.like(id, userId).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, id))
         );
@@ -53,7 +55,7 @@ public class FilmServiceImpl implements FilmService {
                 () -> new NotFoundException(String.format(USER_NOT_FOUND, userId))
         );
         getById(id);
-        feedStorage.create(userId, id, "LIKE", "REMOVE");
+        feedStorage.create(userId, id, EventType.LIKE, EventOperation.REMOVE);
         return likesStorage.dislike(id, userId).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, id))
         );
