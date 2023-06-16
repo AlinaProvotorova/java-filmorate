@@ -81,14 +81,29 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<Film> recommendations(Integer id) {
-        String sql = "SELECT f.* FROM film f JOIN (" +
-                "SELECT DISTINCT lf.FILM_ID FROM LIKES_FILM lf WHERE lf.USER_ID = (" +
-                "SELECT lf2.USER_ID FROM LIKES_FILM lf2 WHERE lf2.USER_ID <> ? AND lf2.FILM_ID IN (" +
-                "SELECT FILM_ID FROM LIKES_FILM WHERE USER_ID = ?) " +
-                "GROUP BY lf2.USER_ID ORDER BY COUNT(*) DESC LIMIT 1) AND lf.FILM_ID NOT IN (" +
-                "SELECT FILM_ID FROM LIKES_FILM WHERE USER_ID = ?)" +
-                ") lf ON lf.FILM_ID = f.ID ";
-        return jdbcTemplate.query(sql, filmStorage::makeFilm, id, id, id);
+        String createLikesTable = "CREATE TEMPORARY TABLE likes AS " +
+                "SELECT FILM_ID FROM LIKES_FILM WHERE USER_ID = ?";
+        jdbcTemplate.update(createLikesTable, id);
+
+        String createOtherUsersLikesTable = "CREATE TEMPORARY TABLE other_users_likes AS " +
+                "SELECT lf2.USER_ID FROM LIKES_FILM lf2 " +
+                "WHERE lf2.USER_ID <> ? AND lf2.FILM_ID IN (SELECT FILM_ID FROM likes) " +
+                "GROUP BY lf2.USER_ID ORDER BY COUNT(*) DESC LIMIT 1";
+        jdbcTemplate.update(createOtherUsersLikesTable, id);
+
+        String sql = "SELECT f.* FROM film f " +
+                "JOIN likes_film lf1 ON lf1.FILM_ID = f.ID " +
+                "JOIN other_users_likes oul ON oul.USER_ID = lf1.USER_ID " +
+                "WHERE lf1.FILM_ID NOT IN (SELECT FILM_ID FROM likes)";
+        List<Film> recommendations = jdbcTemplate.query(sql, filmStorage::makeFilm);
+
+        String dropLikesTable = "DROP TABLE IF EXISTS likes";
+        jdbcTemplate.update(dropLikesTable);
+
+        String dropOtherUsersLikesTable = "DROP TABLE IF EXISTS other_users_likes";
+        jdbcTemplate.update(dropOtherUsersLikesTable);
+
+        return recommendations;
     }
 
 
