@@ -45,14 +45,4 @@ public class Review {
                 ", useful=" + useful +
                 '}';
     }
-
-    //    {
-//        "reviewId": 123,
-//            "content": "This film is sooo baad.",
-//            "isPositive": false,
-//            "userId": 123, // Пользователь
-//            "filmId": 2, // Фильм
-//            "useful": 20 // рейтинг полезности
-//    }
-
 }

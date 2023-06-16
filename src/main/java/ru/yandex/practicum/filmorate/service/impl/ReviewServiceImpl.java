@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.EventOperation;
@@ -27,6 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserStorage userDbStorage;
     private final FeedStorage feedStorage;
 
+    @Autowired
     public ReviewServiceImpl(ReviewStorage reviewStorage,
                              FilmStorage filmDbStorage,
                              UserStorage userDbStorage,
