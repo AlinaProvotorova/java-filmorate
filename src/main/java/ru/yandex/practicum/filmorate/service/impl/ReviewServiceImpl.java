@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.model.EventOperation;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.ReviewService;
 import ru.yandex.practicum.filmorate.storage.FeedStorage;
@@ -46,7 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
         filmDbStorage.getById(review.getFilmId()).orElseThrow(
                 () -> new NotFoundException(String.format(FILM_NOT_FOUND, review.getFilmId())));
         Review reviewWithId = reviewStorage.create(review);
-        feedStorage.create(review.getUserId(), reviewWithId.getReviewId(), "REVIEW", "ADD");
+        feedStorage.create(review.getUserId(), reviewWithId.getReviewId(), EventType.REVIEW, EventOperation.ADD);
         return reviewWithId;
     }
 
@@ -77,7 +79,10 @@ public class ReviewServiceImpl implements ReviewService {
     public Review update(Review review) {
         ReviewValidate.validateId(review.getReviewId());
         Review reviewWithId = getReviewById(review.getReviewId());
-        feedStorage.create(reviewWithId.getUserId(), reviewWithId.getReviewId(), "REVIEW", "UPDATE");
+        feedStorage.create(reviewWithId.getUserId(),
+                reviewWithId.getReviewId(),
+                EventType.REVIEW,
+                EventOperation.UPDATE);
         return reviewStorage.update(review).orElseThrow(() -> new NotFoundException(
                 String.format(REVIEW_NOT_FOUND, review.getReviewId()))
         );
@@ -137,7 +142,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewValidate.validateId(id);
         Review review = getReviewById(id);
 
-        feedStorage.create(review.getUserId(), review.getReviewId(), "REVIEW", "REMOVE");
+        feedStorage.create(review.getUserId(), review.getReviewId(), EventType.REVIEW, EventOperation.REMOVE);
         reviewStorage.deleteReviewById(id);
     }
 }
