@@ -27,7 +27,7 @@ public class ReviewDbStorageTest {
 
     private final ReviewDbStorage reviewDbStorage;
 
-    Review testReview;
+    private Review testReview;
 
     @BeforeEach
     void setUp() {

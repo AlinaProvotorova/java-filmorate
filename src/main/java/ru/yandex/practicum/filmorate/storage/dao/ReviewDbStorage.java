@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,19 +16,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Primary
 @Slf4j
 public class ReviewDbStorage implements ReviewStorage {
-
     private final JdbcTemplate jdbcTemplate;
     private final ReviewMapper reviewMapper;
 
-    private final FilmDbStorage filmDbStorage;
 
     public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewMapper reviewMapper, FilmDbStorage filmDbStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.reviewMapper = reviewMapper;
-        this.filmDbStorage = filmDbStorage;
     }
 
 
