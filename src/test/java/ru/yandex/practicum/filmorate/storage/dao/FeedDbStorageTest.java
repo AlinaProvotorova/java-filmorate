@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
+import ru.yandex.practicum.filmorate.model.EventOperation;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.storage.FeedStorage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,13 +26,13 @@ public class FeedDbStorageTest {
 
     @Test
     void feedStorageTest() {
-        feedStorage.create(1, 2, "FRIEND", "ADD");
-        feedStorage.create(1, 5, "FRIEND", "ADD");
-        feedStorage.create(1, 1, "LIKE", "ADD");
-        feedStorage.create(1, 2, "LIKE", "ADD");
-        feedStorage.create(1, 3, "LIKE", "ADD");
-        feedStorage.create(1, 4, "LIKE", "ADD");
-        feedStorage.create(1, 1, "REVIEW", "ADD");
+        feedStorage.create(1, 2, EventType.FRIEND, EventOperation.ADD);
+        feedStorage.create(1, 5, EventType.FRIEND, EventOperation.ADD);
+        feedStorage.create(1, 1, EventType.LIKE, EventOperation.ADD);
+        feedStorage.create(1, 2, EventType.LIKE, EventOperation.ADD);
+        feedStorage.create(1, 3, EventType.LIKE, EventOperation.ADD);
+        feedStorage.create(1, 4, EventType.LIKE, EventOperation.ADD);
+        feedStorage.create(1, 1, EventType.REVIEW, EventOperation.ADD);
 
         System.out.println(feedStorage.getByUserId(1));
         assertThat(feedStorage.getByUserId(1), hasSize(7));
