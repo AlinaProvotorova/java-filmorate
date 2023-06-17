@@ -41,13 +41,21 @@ public class LikesDbStorage implements LikesStorage {
     }
 
     @Override
-    public List<Film> getPopularFilms(Integer count) {
-        String sql = "SELECT f.ID, f.NAME, f.RELEASE_DATE, f.DESCRIPTION, f.DURATION, f.RATING_ID " +
+    public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        String sql = "SELECT ff.id, ff.name, ff.description, ff.release_date, ff.duration, ff.rating_id " +
+                "FROM (SELECT f.id, f.name, f.description, f.release_date, f.duration, f.rating_id " +
                 "FROM FILM f " +
-                "LEFT JOIN LIKES_FILM lf ON lf.FILM_ID=f.ID " +
-                "GROUP BY f.ID " +
-                "ORDER BY COUNT(LF.USER_ID) DESC LIMIT ?";
-        return jdbcTemplate.query(sql, filmDbStorage::makeFilm, count);
+                "LEFT JOIN FILM_GENRE fg ON fg.film_id = f.id " +
+                "WHERE (? IS NULL OR fg.genre_id = COALESCE(?, fg.genre_id)) " +
+                "GROUP BY f.id) ff " +
+                "LEFT JOIN LIKES_FILM lf ON lf.film_id = ff.id " +
+                "WHERE (? IS NULL OR YEAR(ff.release_date) = COALESCE(?, YEAR(ff.release_date))) " +
+                "GROUP BY ff.id " +
+                "ORDER BY COUNT(lf.user_id) DESC " +
+                "LIMIT ?";
+        return new ArrayList<>(jdbcTemplate.query(sql,
+                filmDbStorage::makeFilm,
+                genreId, genreId, year, year, count));
     }
 
     @Override
@@ -63,5 +71,13 @@ public class LikesDbStorage implements LikesStorage {
         String sql = "SELECT f.ID, f.name, f.description, f.release_date, f.duration, f.rating_id " +
                 "FROM FILM f JOIN likes_film l ON f.ID = l.FILM_ID WHERE l.USER_ID = ? ORDER BY f.ID";
         return new ArrayList<>(jdbcTemplate.query(sql, filmDbStorage::makeFilm, userId));
+    }
+
+    @Override
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        List<Film> userFilms = getFavoriteFilmsByUser(userId);
+        List<Film> friendFilms = getFavoriteFilmsByUser(friendId);
+        userFilms.retainAll(friendFilms);
+        return userFilms;
     }
 }

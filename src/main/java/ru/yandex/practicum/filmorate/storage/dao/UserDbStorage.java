@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -24,6 +25,8 @@ import java.util.Optional;
 @Slf4j
 public class UserDbStorage implements UserStorage {
     protected final JdbcTemplate jdbcTemplate;
+    private final FilmDbStorage filmStorage;
+
 
     @Override
     public List<User> getAll() {
@@ -74,6 +77,33 @@ public class UserDbStorage implements UserStorage {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Film> recommendations(Integer id) {
+        String createLikesTable = "CREATE TEMPORARY TABLE likes AS " +
+                "SELECT FILM_ID FROM LIKES_FILM WHERE USER_ID = ?";
+        jdbcTemplate.update(createLikesTable, id);
+
+        String createOtherUsersLikesTable = "CREATE TEMPORARY TABLE other_users_likes AS " +
+                "SELECT lf2.USER_ID FROM LIKES_FILM lf2 " +
+                "WHERE lf2.USER_ID <> ? AND lf2.FILM_ID IN (SELECT FILM_ID FROM likes) " +
+                "GROUP BY lf2.USER_ID ORDER BY COUNT(*) DESC LIMIT 1";
+        jdbcTemplate.update(createOtherUsersLikesTable, id);
+
+        String sql = "SELECT f.* FROM film f " +
+                "JOIN likes_film lf1 ON lf1.FILM_ID = f.ID " +
+                "JOIN other_users_likes oul ON oul.USER_ID = lf1.USER_ID " +
+                "WHERE lf1.FILM_ID NOT IN (SELECT FILM_ID FROM likes)";
+        List<Film> recommendations = jdbcTemplate.query(sql, filmStorage::makeFilm);
+
+        String dropLikesTable = "DROP TABLE IF EXISTS likes";
+        jdbcTemplate.update(dropLikesTable);
+
+        String dropOtherUsersLikesTable = "DROP TABLE IF EXISTS other_users_likes";
+        jdbcTemplate.update(dropOtherUsersLikesTable);
+
+        return recommendations;
     }
 
 

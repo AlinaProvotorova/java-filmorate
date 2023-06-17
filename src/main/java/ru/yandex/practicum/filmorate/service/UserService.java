@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
@@ -33,4 +35,7 @@ public interface UserService {
 
     void deleteFriend(Integer idUser, Integer idFriend);
 
+    List<Film> recommendations(Integer id);
+
+    List<Event> getFeed(Integer id);
 }

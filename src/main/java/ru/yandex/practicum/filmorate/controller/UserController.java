@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -55,7 +57,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public String sendFriendshipRequest(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public String sendFriendshipRequest(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
         service.sendFriendshipRequest(id, friendId);
         return "Заявка другу " + friendId + " успешно отправленна";
     }
@@ -73,14 +75,25 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public String deleteToFrend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public String deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
         service.deleteFriend(id, friendId);
         return "Друг " + friendId + "  удален";
     }
+
+    @GetMapping("/{id}/recommendations")
+    public List<Film> getRecommendations(@PathVariable Integer id) {
+        return service.recommendations(id);
+    }
+
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
         service.delete(id);
         return "Пользователь " + id + " удален";
+    }
+
+    @GetMapping("/{id}/feed")
+    public List<Event> getFeed(@PathVariable Integer id) {
+        return service.getFeed(id);
     }
 }
